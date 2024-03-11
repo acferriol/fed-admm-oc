@@ -49,13 +49,13 @@ def train(model:Admm_OneClassSVM, X,max_iter:int,verbose=False):
     bi = np.random.randn(1)
     wz = model.coeff_
     bz = model.offset_
-    ui = np.zeros((m))                # scaled weight multipliers
-    vi = np.zeros((1))
+    ui = np.zeros((m,1))                # scaled weight multipliers
+    vi = np.zeros((1,1))
 
     
     #Introduce noise
-    wi_prev = wi + 0.001*np.random.randn(m)*np.sqrt(np.sum(np.square(wi),axis=0))
-    bi_prev = bi + 0.001*np.random.randn(1)*np.sqrt(np.sum(np.square(bi),axis=0))
+    wi_prev = wi + 0.001*np.random.randn(m,1)*np.sqrt(np.sum(np.square(wi),axis=0))
+    bi_prev = bi + 0.001*np.random.randn(1,1)*np.sqrt(np.sum(np.square(bi),axis=0))
 
     wi,bi = wbi_update(X,wi_prev,bi_prev,wz,ui,model.a1,bz,vi,model.a2,landa=model.landa,n_iter=max_iter)
 

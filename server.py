@@ -2,9 +2,12 @@ import flwr as fl
 import utils
 from flwr.common import NDArrays,Scalar
 from sklearn.metrics import *
+from sklearn.pipeline import make_pipeline
 from typing import Dict,Optional,Tuple
 from model import *
 from utils import *
+import matplotlib.pyplot as plt
+import numpy as np
 
 def fit_round(server_round: int) -> Dict:
     """Send round number to client."""
@@ -31,18 +34,31 @@ def get_evaluate_fn(model: Admm_OneClassSVM):
     return evaluate
 
 if __name__ == "__main__":
-    model = Admm_OneClassSVM(landa=0.02,max_iter=50)
+    model = Admm_OneClassSVM(landa=0.02,max_iter=150)
     
-    X_test, y_test = get_test_data()
+    X_test_2d, y_test = get_test_data()
     transform = Nystroem(gamma=2.0, random_state=None, n_components=200)
-    transform.fit(X_test)
-    X_test = transform.transform(X_test)
+    transform.fit(X_test_2d)
+    X_test = transform.transform(X_test_2d)
 
     model = set_initial_parameters(model,X_test.shape[1])
 
+    pipe_admm = make_pipeline(transform,  model)
+
     strategy = fl.server.strategy.FedAvg(
-        min_available_clients=2,
+        min_available_clients=1,
         evaluate_fn=get_evaluate_fn(model),
         on_fit_config_fn=fit_round,
     )
     fl.server.start_server(server_address="127.0.0.1:8080", strategy=strategy, config=fl.server.ServerConfig(num_rounds=20))
+
+    print(model.coeff_,model.offset_)
+    xx, yy = np.meshgrid(np.linspace(-4.5, 4.5, 100), np.linspace(-4.5, 4.5, 100))
+    Z_admm = pipe_admm.decision_function(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
+    plt.figure(figsize=(9, 6))
+    plt.title("One Class ADMM")
+    plt.contourf(xx, yy, Z_admm, levels=np.linspace(Z_admm.min(), 0, 8), cmap=plt.cm.PuBu)
+    a = plt.contour(xx, yy, Z_admm, levels=[0], linewidths=2, colors="darkred")
+    plt.contourf(xx, yy, Z_admm, levels=[0, Z_admm.max()], colors="palevioletred")
+    plt.scatter(X_test_2d[:, 0], X_test_2d[:, 1], c="gold", s=18,edgecolors="k")
+    plt.show(block=True)
