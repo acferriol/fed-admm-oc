@@ -1,0 +1,1300 @@
+<!DOCTYPE html> <html class=show-back-to-top lang=en style><!--
+ Page saved with SingleFile 
+ url: https://flower.ai/docs/framework/tutorial-series-customize-the-client-pytorch.html 
+ saved date: Thu Mar 14 2024 12:37:58 GMT-0700 (hora de verano del Pacífico)
+--><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=color-scheme content="light dark">
+<link rel=canonical href=https://flower.ai/docs/framework/tutorial-series-customize-the-client-pytorch.html>
+<meta name=generator content="Docutils 0.19: https://docutils.sourceforge.io/">
+<link rel=index title=Index href=https://flower.ai/docs/framework/genindex.html><link rel=search title=Search href=https://flower.ai/docs/framework/search.html><link rel=next title="Quickstart PyTorch" href=https://flower.ai/docs/framework/tutorial-quickstart-pytorch.html><link rel=prev title="Build a strategy from scratch" href=https://flower.ai/docs/framework/tutorial-series-build-a-strategy-from-scratch-pytorch.html>
+<meta name=generator content="sphinx-6.2.1, furo 2023.09.10">
+<title>Flower Framework main</title>
+<style>.highlight{background:#f8f8f8}.highlight .k{color:#204a87;font-weight:bold}.highlight .n{color:#000000}.highlight .o{color:#ce5c00;font-weight:bold}.highlight .p{color:#000000;font-weight:bold}.highlight .ow{color:#204a87;font-weight:bold}@media not print{@media (prefers-color-scheme:dark){body:not([data-theme="light"]) .highlight pre{line-height:125%}body:not([data-theme="light"]) .highlight{background:#202020;color:#d0d0d0}body:not([data-theme="light"]) .highlight .k{color:#6ebf26;font-weight:bold}body:not([data-theme="light"]) .highlight .n{color:#d0d0d0}body:not([data-theme="light"]) .highlight .o{color:#d0d0d0}body:not([data-theme="light"]) .highlight .p{color:#d0d0d0}body:not([data-theme="light"]) .highlight .ow{color:#6ebf26;font-weight:bold}}}</style>
+<style>/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */html{-webkit-text-size-adjust:100%;line-height:1.15}body{margin:0}a{background-color:transparent}img{border-style:none}button,input{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button{text-transform:none}button{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}.visually-hidden{clip:rect(0,0,0,0)!important;border:0!important;height:1px!important;margin:-1px!important;overflow:hidden!important;padding:0!important;position:absolute!important;white-space:nowrap!important;width:1px!important}:-moz-focusring{outline:auto}body{--font-stack:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;--font-stack--monospace:"SFMono-Regular",Menlo,Consolas,Monaco,Liberation Mono,Lucida Console,monospace;--font-size--normal:100%;--font-size--small:87.5%;--font-size--small--2:81.25%;--font-size--small--3:75%;--font-size--small--4:62.5%;--sidebar-caption-font-size:var(--font-size--small--2);--sidebar-item-font-size:var(--font-size--small);--sidebar-search-input-font-size:var(--font-size--small);--toc-font-size:var(--font-size--small--3);--toc-font-size--mobile:var(--font-size--normal);--toc-title-font-size:var(--font-size--small--4);--admonition-font-size:0.8125rem;--admonition-title-font-size:0.8125rem;--code-font-size:var(--font-size--small--2);--api-font-size:var(--font-size--small);--header-height:calc(var(--sidebar-item-line-height) + var(--sidebar-item-spacing-vertical)*4);--header-padding:0.5rem;--sidebar-tree-space-above:1.5rem;--sidebar-caption-space-above:1rem;--sidebar-item-line-height:1rem;--sidebar-item-spacing-vertical:0.5rem;--sidebar-item-spacing-horizontal:1rem;--sidebar-item-height:calc(var(--sidebar-item-line-height) + var(--sidebar-item-spacing-vertical)*2);--sidebar-expander-width:var(--sidebar-item-height);--sidebar-search-space-above:0.5rem;--sidebar-search-input-spacing-vertical:0.5rem;--sidebar-search-input-spacing-horizontal:0.5rem;--sidebar-search-input-height:1rem;--sidebar-search-icon-size:var(--sidebar-search-input-height);--toc-title-padding:0.25rem 0;--toc-spacing-vertical:1.5rem;--toc-spacing-horizontal:1.5rem;--toc-item-spacing-vertical:0.4rem;--toc-item-spacing-horizontal:1rem;--icon-search:url(data:image/svg+xml;charset=utf-8,<svg\ xmlns=\"http://www.w3.org/2000/svg\"\ viewBox=\"0\ 0\ 24\ 24\"\ stroke-width=\"1.5\"\ stroke=\"currentColor\"\ fill=\"none\"\ stroke-linecap=\"round\"\ stroke-linejoin=\"round\"><path\ d=\"M0\ 0h24v24H0z\"\ stroke=\"none\"\/><circle\ cx=\"10\"\ cy=\"10\"\ r=\"7\"\/><path\ d=\"m21\ 21-6-6\"\/><\/svg>);--icon-pencil:url(data:image/svg+xml;charset=utf-8,<svg\ xmlns=\"http://www.w3.org/2000/svg\"\ viewBox=\"0\ 0\ 24\ 24\"><path\ d=\"M20.71\ 7.04c.39-.39.39-1.04\ 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41\ 0l-1.84\ 1.83\ 3.75\ 3.75M3\ 17.25V21h3.75L17.81\ 9.93l-3.75-3.75L3\ 17.25z\"\/><\/svg>);--icon-abstract:url(data:image/svg+xml;charset=utf-8,<svg\ xmlns=\"http://www.w3.org/2000/svg\"\ viewBox=\"0\ 0\ 24\ 24\"><path\ d=\"M4\ 5h16v2H4V5m0\ 4h16v2H4V9m0\ 4h16v2H4v-2m0\ 4h10v2H4v-2z\"\/><\/svg>);--icon-info:url(data:image/svg+xml;charset=utf-8,<svg\ xmlns=\"http://www.w3.org/2000/svg\"\ viewBox=\"0\ 0\ 24\ 24\"><path\ d=\"M13\ 9h-2V7h2m0\ 10h-2v-6h2m-1-9A10\ 10\ 0\ 0\ 0\ 2\ 12a10\ 10\ 0\ 0\ 0\ 10\ 10\ 10\ 10\ 0\ 0\ 0\ 10-10A10\ 10\ 0\ 0\ 0\ 12\ 2z\"\/><\/svg>);--icon-flame:url(data:image/svg+xml;charset=utf-8,<svg\ xmlns=\"http://www.w3.org/2000/svg\"\ viewBox=\"0\ 0\ 24\ 24\"><path\ d=\"M17.55\ 11.2c-.23-.3-.5-.56-.76-.82-.65-.6-1.4-1.03-2.03-1.66C13.3\ 7.26\ 13\ 4.85\ 13.91\ 3c-.91.23-1.75.75-2.45\ 1.32-2.54\ 2.08-3.54\ 5.75-2.34\ 8.9.04.1.08.2.08.33\ 0\ .22-.15.42-.35.5-.22.1-.46.04-.64-.12a.83.83\ 0\ 0\ 1-.15-.17c-1.1-1.43-1.28-3.48-.53-5.12C5.89\ 10\ 5\ 12.3\ 5.14\ 14.47c.04.5.1\ 1\ .27\ 1.5.14.6.4\ 1.2.72\ 1.73\ 1.04\ 1.73\ 2.87\ 2.97\ 4.84\ 3.22\ 2.1.27\ 4.35-.12\ 5.96-1.6\ 1.8-1.66\ 2.45-4.32\ 1.5-6.6l-.13-.26c-.2-.46-.47-.87-.8-1.25l.05-.01m-3.1\ 6.3c-.28.24-.73.5-1.08.6-1.1.4-2.2-.16-2.87-.82\ 1.19-.28\ 1.89-1.16\ 2.09-2.05.17-.8-.14-1.46-.27-2.23-.12-.74-.1-1.37.18-2.06.17.38.37.76.6\ 1.06.76\ 1\ 1.95\ 1.44\ 2.2\ 2.8.04.14.06.28.06.43.03.82-.32\ 1.72-.92\ 2.27h.01z\"\/><\/svg>);--icon-question:url(data:image/svg+xml;charset=utf-8,<svg\ xmlns=\"http://www.w3.org/2000/svg\"\ viewBox=\"0\ 0\ 24\ 24\"><path\ d=\"m15.07\ 11.25-.9.92C13.45\ 12.89\ 13\ 13.5\ 13\ 15h-2v-.5c0-1.11.45-2.11\ 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41a2\ 2\ 0\ 0\ 0-2-2\ 2\ 2\ 0\ 0\ 0-2\ 2H8a4\ 4\ 0\ 0\ 1\ 4-4\ 4\ 4\ 0\ 0\ 1\ 4\ 4\ 3.2\ 3.2\ 0\ 0\ 1-.93\ 2.25M13\ 19h-2v-2h2M12\ 2A10\ 10\ 0\ 0\ 0\ 2\ 12a10\ 10\ 0\ 0\ 0\ 10\ 10\ 10\ 10\ 0\ 0\ 0\ 10-10c0-5.53-4.5-10-10-10z\"\/><\/svg>);--icon-warning:url(data:image/svg+xml;charset=utf-8,<svg\ xmlns=\"http://www.w3.org/2000/svg\"\ viewBox=\"0\ 0\ 24\ 24\"><path\ d=\"M13\ 14h-2v-4h2m0\ 8h-2v-2h2M1\ 21h22L12\ 2\ 1\ 21z\"\/><\/svg>);--icon-failure:url(data:image/svg+xml;charset=utf-8,<svg\ xmlns=\"http://www.w3.org/2000/svg\"\ viewBox=\"0\ 0\ 24\ 24\"><path\ d=\"M12\ 2c5.53\ 0\ 10\ 4.47\ 10\ 10s-4.47\ 10-10\ 10S2\ 17.53\ 2\ 12\ 6.47\ 2\ 12\ 2m3.59\ 5L12\ 10.59\ 8.41\ 7\ 7\ 8.41\ 10.59\ 12\ 7\ 15.59\ 8.41\ 17\ 12\ 13.41\ 15.59\ 17\ 17\ 15.59\ 13.41\ 12\ 17\ 8.41\ 15.59\ 7z\"\/><\/svg>);--icon-spark:url(data:image/svg+xml;charset=utf-8,<svg\ xmlns=\"http://www.w3.org/2000/svg\"\ viewBox=\"0\ 0\ 24\ 24\"><path\ d=\"m11.5\ 20\ 4.86-9.73H13V4l-5\ 9.73h3.5V20M12\ 2c2.75\ 0\ 5.1\ 1\ 7.05\ 2.95C21\ 6.9\ 22\ 9.25\ 22\ 12s-1\ 5.1-2.95\ 7.05C17.1\ 21\ 14.75\ 22\ 12\ 22s-5.1-1-7.05-2.95C3\ 17.1\ 2\ 14.75\ 2\ 12s1-5.1\ 2.95-7.05C6.9\ 3\ 9.25\ 2\ 12\ 2z\"\/><\/svg>);--color-admonition-title--caution:#ff9100;--color-admonition-title-background--caution:rgba(255,145,0,.2);--color-admonition-title--warning:#ff9100;--color-admonition-title-background--warning:rgba(255,145,0,.2);--color-admonition-title--danger:#ff5252;--color-admonition-title-background--danger:rgba(255,82,82,.2);--color-admonition-title--attention:#ff5252;--color-admonition-title-background--attention:rgba(255,82,82,.2);--color-admonition-title--error:#ff5252;--color-admonition-title-background--error:rgba(255,82,82,.2);--color-admonition-title--hint:#00c852;--color-admonition-title-background--hint:rgba(0,200,82,.2);--color-admonition-title--tip:#00c852;--color-admonition-title-background--tip:rgba(0,200,82,.2);--color-admonition-title--important:#00bfa5;--color-admonition-title-background--important:rgba(0,191,165,.2);--color-admonition-title--note:#00b0ff;--color-admonition-title-background--note:rgba(0,176,255,.2);--color-admonition-title--seealso:#448aff;--color-admonition-title-background--seealso:rgba(68,138,255,.2);--color-admonition-title--admonition-todo:grey;--color-admonition-title-background--admonition-todo:hsla(0,0%,50%,.2);--color-admonition-title:#651fff;--color-admonition-title-background:rgba(101,31,255,.2);--icon-admonition-default:var(--icon-abstract);--color-topic-title:#14b8a6;--color-topic-title-background:rgba(20,184,166,.2);--icon-topic-default:var(--icon-pencil);--color-problematic:#b30000;--color-foreground-primary:#000;--color-foreground-secondary:#5a5c63;--color-foreground-muted:#646776;--color-foreground-border:#878787;--color-background-primary:#fff;--color-background-secondary:#f8f9fb;--color-background-hover:#efeff4;--color-background-hover--transparent:#efeff400;--color-background-border:#eeebee;--color-background-item:#ccc;--color-announcement-background:#000000dd;--color-announcement-text:#eeebee;--color-brand-primary:#2962ff;--color-brand-content:#2a5adf;--color-api-background:var(--color-background-hover--transparent);--color-api-background-hover:var(--color-background-hover);--color-api-overall:var(--color-foreground-secondary);--color-api-name:var(--color-problematic);--color-api-pre-name:var(--color-problematic);--color-api-paren:var(--color-foreground-secondary);--color-api-keyword:var(--color-foreground-primary);--color-highlight-on-target:#ffc;--color-inline-code-background:var(--color-background-secondary);--color-highlighted-background:#def;--color-highlighted-text:var(--color-foreground-primary);--color-guilabel-background:#ddeeff80;--color-guilabel-border:#bedaf580;--color-guilabel-text:var(--color-foreground-primary);--color-admonition-background:transparent;--color-table-header-background:var(--color-background-secondary);--color-table-border:var(--color-background-border);--color-card-border:var(--color-background-secondary);--color-card-background:transparent;--color-card-marginals-background:var(--color-background-secondary);--color-header-background:var(--color-background-primary);--color-header-border:var(--color-background-border);--color-header-text:var(--color-foreground-primary);--color-sidebar-background:var(--color-background-secondary);--color-sidebar-background-border:var(--color-background-border);--color-sidebar-brand-text:var(--color-foreground-primary);--color-sidebar-caption-text:var(--color-foreground-muted);--color-sidebar-link-text:var(--color-foreground-secondary);--color-sidebar-link-text--top-level:var(--color-brand-primary);--color-sidebar-item-background:var(--color-sidebar-background);--color-sidebar-item-background--current:var(--color-sidebar-item-background);--color-sidebar-item-background--hover:linear-gradient(90deg,var(--color-background-hover--transparent) 0%,var(--color-background-hover) var(--sidebar-item-spacing-horizontal),var(--color-background-hover) 100%);--color-sidebar-item-expander-background:transparent;--color-sidebar-item-expander-background--hover:var(--color-background-hover);--color-sidebar-search-text:var(--color-foreground-primary);--color-sidebar-search-background:var(--color-background-secondary);--color-sidebar-search-background--focus:var(--color-background-primary);--color-sidebar-search-border:var(--color-background-border);--color-sidebar-search-icon:var(--color-foreground-muted);--color-toc-background:var(--color-background-primary);--color-toc-title-text:var(--color-foreground-muted);--color-toc-item-text:var(--color-foreground-secondary);--color-toc-item-text--hover:var(--color-foreground-primary);--color-toc-item-text--active:var(--color-brand-primary);--color-content-foreground:var(--color-foreground-primary);--color-content-background:transparent;--color-link:var(--color-brand-content);--color-link--hover:var(--color-brand-content);--color-link-underline:var(--color-background-border);--color-link-underline--hover:var(--color-foreground-border)}@media not print{@media (prefers-color-scheme:dark){body:not([data-theme=light]){--color-problematic:#ee5151;--color-foreground-primary:#ffffffcc;--color-foreground-secondary:#9ca0a5;--color-foreground-muted:#81868d;--color-foreground-border:#666;--color-background-primary:#131416;--color-background-secondary:#1a1c1e;--color-background-hover:#1e2124;--color-background-hover--transparent:#1e212400;--color-background-border:#303335;--color-background-item:#444;--color-announcement-background:#000000dd;--color-announcement-text:#eeebee;--color-brand-primary:#2b8cee;--color-brand-content:#368ce2;--color-highlighted-background:#083563;--color-guilabel-background:#08356380;--color-guilabel-border:#13395f80;--color-api-keyword:var(--color-foreground-secondary);--color-highlight-on-target:#330;--color-admonition-background:#18181a;--color-card-border:var(--color-background-secondary);--color-card-background:#18181a;--color-card-marginals-background:var(--color-background-hover)}}}body[data-theme=light] .theme-toggle svg.theme-icon-when-light{display:block}code,pre{font-family:var(--font-stack--monospace)}body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}article{line-height:1.5}h1,h2,h3{border-radius:.5rem;font-weight:700;line-height:1.25;margin:.5rem -.5rem;padding-left:.5rem;padding-right:.5rem}h1+p,h2+p,h3+p{margin-top:0}h1{font-size:2.5em;margin-bottom:1rem}h1,h2{margin-top:1.75rem}h2{font-size:2em}h3{font-size:1.5em}p{margin-bottom:.75rem;margin-top:.5rem}a{color:var(--color-link);text-decoration:underline;text-decoration-color:var(--color-link-underline)}a:hover{color:var(--color-link--hover);text-decoration-color:var(--color-link-underline--hover)}a.muted-link{color:inherit}a.muted-link:hover{color:var(--color-link);text-decoration-color:var(--color-link-underline--hover)}html{overflow-x:hidden;overflow-y:scroll;scroll-behavior:smooth}.sidebar-scroll,.toc-scroll,article[role=main] *{scrollbar-color:var(--color-foreground-border) transparent;scrollbar-width:thin}.sidebar-scroll::-webkit-scrollbar,.toc-scroll::-webkit-scrollbar,article[role=main] ::-webkit-scrollbar{height:.25rem;width:.25rem}.sidebar-scroll::-webkit-scrollbar-thumb,.toc-scroll::-webkit-scrollbar-thumb,article[role=main] ::-webkit-scrollbar-thumb{background-color:var(--color-foreground-border);border-radius:.125rem}body,html{background:var(--color-background-primary);color:var(--color-foreground-primary);height:100%}article{background:var(--color-content-background);color:var(--color-content-foreground);overflow-wrap:break-word}.page{display:flex;min-height:100%}.main{display:flex;flex:1}.sidebar-drawer{background:var(--color-sidebar-background);border-right:1px solid var(--color-sidebar-background-border);box-sizing:border-box;display:flex;justify-content:flex-end;min-width:15em;width:calc(50% - 26em)}.sidebar-container,.toc-drawer{box-sizing:border-box;width:15em}.toc-drawer{background:var(--color-toc-background);padding-right:1rem}.sidebar-sticky,.toc-sticky{display:flex;flex-direction:column;height:100vh;position:sticky;top:0}.sidebar-scroll,.toc-scroll{flex-grow:1;flex-shrink:1;overflow:auto;scroll-behavior:smooth}.content{display:flex;flex-direction:column;justify-content:space-between;padding:0 3em;width:46em}.icon{display:inline-block;height:1rem;width:1rem}.icon svg{height:100%;width:100%}.theme-toggle-container{vertical-align:middle}.theme-toggle{background:transparent;border:none;cursor:pointer;padding:0}.theme-toggle svg{color:var(--color-foreground-primary);display:none;height:1rem;vertical-align:middle;width:1rem}.content-icon-container{display:flex;float:right;gap:.5rem;margin-bottom:1rem;margin-left:1rem;margin-top:1.5rem}.sidebar-drawer{transition:left .25s ease-in-out;z-index:30}.toc-drawer{transition:right .25s ease-in-out;z-index:50}#__navigation:checked~.page .sidebar-drawer{left:0;top:0}#__toc:checked~.page .toc-drawer{right:0;top:0}.back-to-top{background:var(--color-background-primary);border-radius:1rem;box-shadow:0 .2rem .5rem rgba(0,0,0,.05),0 0 1px 0 hsla(220,9%,46%,.502);font-size:.8125rem;left:0;margin-left:50%;padding:.5rem .75rem .5rem .5rem;position:fixed;text-decoration:none;top:1rem;transform:translateX(-50%);z-index:10}.back-to-top svg{fill:currentColor;display:inline-block;height:1rem;width:1rem}.back-to-top span{margin-left:.25rem}.show-back-to-top .back-to-top{align-items:center;display:flex}@media (min-width:97em){html{font-size:110%}}@media (max-width:82em){.toc-drawer{border-left:1px solid var(--color-background-muted);height:100vh;position:fixed;right:-15em;top:0}.toc-tree{border-left:none;font-size:var(--toc-font-size--mobile)}.sidebar-drawer{width:calc(50% - 18.5em)}}@media (max-width:67em){.sidebar-drawer{height:100vh;left:-15em;position:fixed;top:0;width:15em}.theme-toggle-content{display:none}.theme-toggle svg{height:1.25rem;width:1.25rem}:target{scroll-margin-top:var(--header-height)}.back-to-top{top:calc(var(--header-height) + .5rem)}.page{flex-direction:column;justify-content:center}.content{margin-left:auto;margin-right:auto}}@media (max-width:52em){.content{overflow-x:auto;width:100%}}@media (max-width:46em){.content{padding:0 1em}}code.literal{background:var(--color-inline-code-background);border-radius:.2em;font-size:var(--font-size--small--2);padding:.1em .2em}p code.literal{border:1px solid var(--color-background-border)}div[class*=" highlight-"],div[class^=highlight-]{display:flex;margin:1em 0}pre{margin:0}pre{overflow:auto}article[role=main] .highlight pre{line-height:1.5}.highlight pre{font-size:var(--code-font-size);padding:.625rem .875rem}.highlight{border-radius:.2rem;width:100%}img{box-sizing:border-box;height:auto;max-width:100%}ul{margin-bottom:1rem;margin-top:1rem;padding-left:1.2rem}ol li>p:first-child,ul li>p:first-child{margin-bottom:.25rem;margin-top:.25rem}ol li>p:last-child,ul li>p:last-child{margin-top:.25rem}blockquote{background:var(--color-background-secondary);border-left:4px solid var(--color-background-border);margin-left:0;margin-right:0;padding:.5rem 1rem}:target{scroll-margin-top:.5rem}@media (max-width:67em){:target{scroll-margin-top:calc(.5rem + var(--header-height))}}.headerlink{font-weight:100;-webkit-user-select:none;-moz-user-select:none;user-select:none}h1>.headerlink,h2>.headerlink,h3>.headerlink{margin-left:.5rem;visibility:hidden}.code-block-caption:hover>.headerlink,dl dt:hover>.headerlink,figcaption p:hover>.headerlink,h1:hover>.headerlink,h2:hover>.headerlink,h3:hover>.headerlink,h4:hover>.headerlink,h5:hover>.headerlink,h6:hover>.headerlink,p.caption:hover>.headerlink,table>caption:hover>.headerlink{visibility:visible}:target>h1:first-of-type,:target>h2:first-of-type,:target>h3:first-of-type,:target>h4:first-of-type,:target>h5:first-of-type,:target>h6:first-of-type,span:target~h1:first-of-type,span:target~h2:first-of-type,span:target~h3:first-of-type,span:target~h4:first-of-type,span:target~h5:first-of-type,span:target~h6:first-of-type{background-color:var(--color-highlight-on-target)}:target>h1:first-of-type code.literal,:target>h2:first-of-type code.literal,:target>h3:first-of-type code.literal,:target>h4:first-of-type code.literal,:target>h5:first-of-type code.literal,:target>h6:first-of-type code.literal,span:target~h1:first-of-type code.literal,span:target~h2:first-of-type code.literal,span:target~h3:first-of-type code.literal,span:target~h4:first-of-type code.literal,span:target~h5:first-of-type code.literal,span:target~h6:first-of-type code.literal{background-color:transparent}footer{display:flex;flex-direction:column;font-size:var(--font-size--small);margin-top:2rem}.bottom-of-page{align-items:center;border-top:1px solid var(--color-background-border);color:var(--color-foreground-secondary);display:flex;justify-content:space-between;line-height:1.5;margin-top:1rem;padding-bottom:1rem;padding-top:1rem}@media (max-width:46em){.bottom-of-page{flex-direction:column-reverse;gap:.25rem;text-align:center}}.bottom-of-page .left-details{font-size:var(--font-size--small)}.bottom-of-page .right-details{display:flex;flex-direction:column;gap:.25rem;text-align:right}.related-pages a{align-items:center;display:flex;text-decoration:none}.related-pages a:hover .page-info .title{color:var(--color-link);text-decoration:underline;text-decoration-color:var(--color-link-underline)}.related-pages a svg.furo-related-icon,.related-pages a svg.furo-related-icon>use{color:var(--color-foreground-border);flex-shrink:0;height:.75rem;margin:0 .5rem;width:.75rem}.related-pages a.next-page{clear:right;float:right;max-width:50%;text-align:right}.related-pages a.prev-page{clear:left;float:left;max-width:50%}.related-pages a.prev-page svg{transform:rotate(180deg)}.page-info{display:flex;flex-direction:column;overflow-wrap:anywhere}.next-page .page-info{align-items:flex-end}.page-info .context{align-items:center;color:var(--color-foreground-muted);display:flex;font-size:var(--font-size--small);padding-bottom:.1rem;text-decoration:none}.sidebar-brand{display:flex;flex-direction:column;flex-shrink:0;padding:var(--sidebar-item-spacing-vertical) var(--sidebar-item-spacing-horizontal);text-decoration:none}.sidebar-brand-text{color:var(--color-sidebar-brand-text);font-size:1.5rem;overflow-wrap:break-word}.sidebar-brand-text,.sidebar-logo-container{margin:var(--sidebar-item-spacing-vertical)0}.sidebar-logo{display:block;margin:0 auto;max-width:100%}.sidebar-search-container{align-items:center;background:var(--color-sidebar-search-background);display:flex;margin-top:var(--sidebar-search-space-above);position:relative}.sidebar-search-container:focus-within,.sidebar-search-container:hover{background:var(--color-sidebar-search-background--focus)}.sidebar-search-container:before{background-color:var(--color-sidebar-search-icon);content:"";height:var(--sidebar-search-icon-size);left:var(--sidebar-item-spacing-horizontal);-webkit-mask-image:var(--icon-search);mask-image:var(--icon-search);position:absolute;width:var(--sidebar-search-icon-size)}.sidebar-search{background:transparent;border:none;border-bottom:1px solid var(--color-sidebar-search-border);border-top:1px solid var(--color-sidebar-search-border);box-sizing:border-box;color:var(--color-sidebar-search-foreground);padding:var(--sidebar-search-input-spacing-vertical) var(--sidebar-search-input-spacing-horizontal) var(--sidebar-search-input-spacing-vertical) calc(var(--sidebar-item-spacing-horizontal) + var(--sidebar-search-input-spacing-horizontal) + var(--sidebar-search-icon-size));width:100%;z-index:10}.sidebar-search:focus{outline:none}.sidebar-search::-moz-placeholder{font-size:var(--sidebar-search-input-font-size)}.sidebar-search::placeholder{font-size:var(--sidebar-search-input-font-size)}.sidebar-tree{font-size:var(--sidebar-item-font-size);margin-bottom:var(--sidebar-item-spacing-vertical);margin-top:var(--sidebar-tree-space-above)}.sidebar-tree ul{display:flex;flex-direction:column;list-style:none;margin-bottom:0;margin-top:0;padding:0}.sidebar-tree li{margin:0;position:relative}.sidebar-tree .reference{box-sizing:border-box;display:inline-block;height:100%;line-height:var(--sidebar-item-line-height);overflow-wrap:anywhere;padding:var(--sidebar-item-spacing-vertical) var(--sidebar-item-spacing-horizontal);text-decoration:none;width:100%}.sidebar-tree .reference:hover{background:var(--color-sidebar-item-background--hover)}.sidebar-tree .current-page>.reference{font-weight:700}.sidebar-tree label{align-items:center;cursor:pointer;display:flex;height:var(--sidebar-item-height);justify-content:center;position:absolute;right:0;top:0;-webkit-user-select:none;-moz-user-select:none;user-select:none;width:var(--sidebar-expander-width)}.sidebar-tree .caption,.sidebar-tree :not(.caption)>.caption-text{color:var(--color-sidebar-caption-text);font-size:var(--sidebar-caption-font-size);font-weight:700;margin:var(--sidebar-caption-space-above)0 0 0;padding:var(--sidebar-item-spacing-vertical) var(--sidebar-item-spacing-horizontal);text-transform:uppercase}.sidebar-tree li.has-children>.reference{padding-right:var(--sidebar-expander-width)}.sidebar-tree .toctree-l1>.reference,.sidebar-tree .toctree-l1>label .icon{color:var(--color-sidebar-link-text--top-level)}.sidebar-tree label{background:var(--color-sidebar-item-expander-background)}.sidebar-tree label:hover{background:var(--color-sidebar-item-expander-background--hover)}.sidebar-tree .current>.reference{background:var(--color-sidebar-item-background--current)}.sidebar-tree .current>.reference:hover{background:var(--color-sidebar-item-background--hover)}.toctree-checkbox~label .icon svg{transform:rotate(90deg)}.toctree-checkbox:checked~label .icon svg{transform:rotate(-90deg)}.toc-title-container{padding:var(--toc-title-padding);padding-top:var(--toc-spacing-vertical)}.toc-title{color:var(--color-toc-title-text);font-size:var(--toc-title-font-size);padding-left:var(--toc-spacing-horizontal);text-transform:uppercase}.toc-tree-container{padding-bottom:var(--toc-spacing-vertical)}.toc-tree{border-left:1px solid var(--color-background-border);font-size:var(--toc-font-size);line-height:1.3;padding-left:calc(var(--toc-spacing-horizontal) - var(--toc-item-spacing-horizontal))}.toc-tree>ul>li:first-child{padding-top:0}.toc-tree>ul>li:first-child>ul{padding-left:0}.toc-tree ul{list-style-type:none;margin-bottom:0;margin-top:0;padding-left:var(--toc-item-spacing-horizontal)}.toc-tree li{padding-top:var(--toc-item-spacing-vertical)}.toc-tree li.scroll-current>.reference{color:var(--color-toc-item-text--active);font-weight:700}.toc-tree .reference{color:var(--color-toc-item-text);overflow-wrap:anywhere;text-decoration:none}.toc-scroll{max-height:100vh;overflow-y:scroll}</style>
+<style>button.copybtn{position:absolute;display:flex;user-select:none;padding:0;outline:none;border-radius:0.4em}button.copybtn svg{stroke:currentColor;width:1.5em;height:1.5em}div.highlight{position:relative}.highlight:hover button.copybtn,button.copybtn.success{opacity:1}.highlight button.copybtn:hover{background-color:rgb(235,235,235)}.highlight button.copybtn:active{background-color:rgb(187,187,187)}.o-tooltip--left:after{opacity:0;visibility:hidden;position:absolute;content:attr(data-tooltip);padding:.2em;font-size:.8em;left:-.2em;background:grey;color:white;white-space:nowrap;z-index:2;border-radius:2px;transform:translateX(-102%) translateY(0);transition:opacity 0.2s cubic-bezier(0.64,0.09,0.08,1),transform 0.2s cubic-bezier(0.64,0.09,0.08,1)}.o-tooltip--left:hover:after{display:block;opacity:1;visibility:visible;transform:translateX(-100%) translateY(0);transition:opacity 0.2s cubic-bezier(0.64,0.09,0.08,1),transform 0.2s cubic-bezier(0.64,0.09,0.08,1);transition-delay:.5s}</style>
+<style>@media (min-width:576px){}@media (min-width:768px){}@media (min-width:992px){}@media (min-width:1200px){}@keyframes sd-slide-from-left{0%{transform:translateX(-100%)}100%{transform:translateX(0)}}@keyframes sd-slide-from-right{0%{transform:translateX(200%)}100%{transform:translateX(0)}}@keyframes sd-grow100{0%{transform:scale(0);opacity:.5}100%{transform:scale(1);opacity:1}}@keyframes sd-grow50{0%{transform:scale(0.5);opacity:.5}100%{transform:scale(1);opacity:1}}@keyframes sd-grow50-rot20{0%{transform:scale(0.5) rotateZ(-20deg);opacity:.5}75%{transform:scale(1) rotateZ(5deg);opacity:1}95%{transform:scale(1) rotateZ(-1deg);opacity:1}100%{transform:scale(1) rotateZ(0);opacity:1}}@media (prefers-reduced-motion:reduce){}@media (min-width:576px){}@media (min-width:768px){}@media (min-width:992px){}@media (min-width:1200px){}@media (min-width:576px){}@media (min-width:768px){}@media (min-width:992px){}@media (min-width:1200px){}@media (min-width:576px){}@media (min-width:768px){}@media (min-width:992px){}@media (min-width:1200px){}@keyframes sd-fade-in{0%{opacity:0}100%{opacity:1}}@keyframes sd-slide-down{0%{transform:translate(0,-10px)}100%{transform:translate(0,0)}}:root{--sd-color-primary:#0071bc;--sd-color-secondary:#6c757d;--sd-color-success:#28a745;--sd-color-info:#17a2b8;--sd-color-warning:#f0b37e;--sd-color-danger:#dc3545;--sd-color-light:#f8f9fa;--sd-color-muted:#6c757d;--sd-color-dark:#212529;--sd-color-black:black;--sd-color-white:white;--sd-color-primary-highlight:#0060a0;--sd-color-secondary-highlight:#5c636a;--sd-color-success-highlight:#228e3b;--sd-color-info-highlight:#148a9c;--sd-color-warning-highlight:#cc986b;--sd-color-danger-highlight:#bb2d3b;--sd-color-light-highlight:#d3d4d5;--sd-color-muted-highlight:#5c636a;--sd-color-dark-highlight:#1c1f23;--sd-color-black-highlight:black;--sd-color-white-highlight:#d9d9d9;--sd-color-primary-text:#fff;--sd-color-secondary-text:#fff;--sd-color-success-text:#fff;--sd-color-info-text:#fff;--sd-color-warning-text:#212529;--sd-color-danger-text:#fff;--sd-color-light-text:#212529;--sd-color-muted-text:#fff;--sd-color-dark-text:#fff;--sd-color-black-text:#fff;--sd-color-white-text:#212529;--sd-color-shadow:rgba(0,0,0,0.15);--sd-color-card-border:rgba(0,0,0,0.125);--sd-color-card-border-hover:hsla(231,99%,66%,1);--sd-color-card-background:transparent;--sd-color-card-text:inherit;--sd-color-card-header:transparent;--sd-color-card-footer:transparent;--sd-color-tabs-label-active:hsla(231,99%,66%,1);--sd-color-tabs-label-hover:hsla(231,99%,66%,1);--sd-color-tabs-label-inactive:hsl(0,0%,66%);--sd-color-tabs-underline-active:hsla(231,99%,66%,1);--sd-color-tabs-underline-hover:rgba(178,206,245,0.62);--sd-color-tabs-underline-inactive:transparent;--sd-color-tabs-overline:rgb(222,222,222);--sd-color-tabs-underline:rgb(222,222,222);--sd-fontsize-tabs-label:1rem}</style>
+<style>div.nbinput.container div.prompt *,div.nbinput.container div.input_area pre,div.nbinput.container div.input_area .highlight{border:none;padding:0;margin:0;box-shadow:none}div.nbinput.container>div[class*=highlight]{margin:0}div.nbinput.container div.prompt *{background:none}div.nbinput.container{display:-webkit-flex;display:flex;align-items:flex-start;margin:0;width:100%}@media (max-width:540px){div.nbinput.container{flex-direction:column}}div.nbinput.container{padding-top:5px}div.nblast.container{padding-bottom:5px}div.nbinput.container div.prompt pre{color:#307FC1}div.nbinput.container div.prompt{width:4.5ex;padding-top:5px;position:relative;user-select:none}div.nbinput.container div.prompt>div{position:absolute;right:0;margin-right:0.3ex}@media (max-width:540px){div.nbinput.container div.prompt{width:unset;text-align:left;padding:0.4em}div.nbinput.container div.prompt>div{position:unset}}div.nbinput.container div.prompt pre{overflow:hidden;white-space:pre}div.nbinput.container div.input_area{-webkit-flex:1;flex:1;overflow:auto}@media (max-width:540px){div.nbinput.container div.input_area{width:100%}}div.nbinput.container div.input_area{border:1px solid #e0e0e0;border-radius:2px}div.nbinput.container div.input_area div[class*=highlight]>pre{padding:5px;margin:0}div.nbinput.container div.input_area>div[class^="highlight"]{overflow-y:hidden}</style>
+<style>.highlight:hover button.copybtn{color:var(--color-code-foreground)}.highlight button.copybtn{align-items:center;background-color:var(--color-code-background);border:none;color:var(--color-background-item);cursor:pointer;height:1.25em;opacity:1;right:.5rem;top:.625rem;transition:color .3s,opacity .3s;width:1.25em}.highlight button.copybtn:hover{background-color:var(--color-code-background);color:var(--color-brand-content)}.highlight button.copybtn:after{background-color:transparent;color:var(--color-code-foreground);display:none}.highlight button.copybtn svg{padding:0}body{--sd-color-primary:var(--color-brand-primary);--sd-color-primary-highlight:var(--color-brand-content);--sd-color-primary-text:var(--color-background-primary);--sd-color-shadow:rgba(0,0,0,.05);--sd-color-card-border:var(--color-card-border);--sd-color-card-border-hover:var(--color-brand-content);--sd-color-card-background:var(--color-card-background);--sd-color-card-text:var(--color-foreground-primary);--sd-color-card-header:var(--color-card-marginals-background);--sd-color-card-footer:var(--color-card-marginals-background);--sd-color-tabs-label-active:var(--color-brand-content);--sd-color-tabs-label-hover:var(--color-foreground-muted);--sd-color-tabs-label-inactive:var(--color-foreground-muted);--sd-color-tabs-underline-active:var(--color-brand-content);--sd-color-tabs-underline-hover:var(--color-foreground-border);--sd-color-tabs-underline-inactive:var(--color-background-border);--sd-color-tabs-overline:var(--color-background-border);--sd-color-tabs-underline:var(--color-background-border)}body{--tabs--label-text:var(--color-foreground-muted);--tabs--label-text--hover:var(--color-foreground-muted);--tabs--label-text--active:var(--color-brand-content);--tabs--label-text--active--hover:var(--color-brand-content);--tabs--label-background:transparent;--tabs--label-background--hover:transparent;--tabs--label-background--active:transparent;--tabs--label-background--active--hover:transparent;--tabs--padding-x:0.25em;--tabs--margin-x:1em;--tabs--border:var(--color-background-border);--tabs--label-border:transparent;--tabs--label-border--hover:var(--color-foreground-muted);--tabs--label-border--active:var(--color-brand-content);--tabs--label-border--active--hover:var(--color-brand-content)}[role=main] .container{max-width:none;padding-left:0;padding-right:0}</style>
+<style>html,body{font-family:Montserrat,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji}</style>
+<style>body{--color-code-background:#f8f8f8;--color-code-foreground:black}@media not print{@media (prefers-color-scheme:dark){body:not([data-theme="light"]){--color-code-background:#202020;--color-code-foreground:#d0d0d0}}}</style><meta name=referrer content=no-referrer><link rel="shortcut icon" href="data:image/vnd.microsoft.icon;base64,AAABAAMAMDAAAAEACACoDgAANgAAACAgAAABAAgAqAgAAN4OAAAQEAAAAQAIAGgFAACGFwAAKAAAADAAAABgAAAAAQAIAAAAAAAACQAAAAAAAAAAAAAAAQAAAAAAAN/d3ADMysgAube0ADIrJQBtaGQAqKWjAKmlowBaVVAAW1VQAJaSjwDRz84A+fn5AL68ugCDf3sA1NPRAP39/ABNR0IAdnFtAOzr6wA7NC4Asa6sAGNeWQCem5gA2tjXAMfFwwC0sq8AkY2KAFZQSwC5t7UAQz03APX09AC6t7UARD03AKekoQD4+PcASUI9AIR/fAA2LykArKmnAHFsaACZlpMAmpaTANXT0gBfWVQAwsC+AP39/QCwraoAZF5aAIyIhQBRS0YAtLKwAD84MgC1srAA3dzbAKKfnADLyccAMSokADIqJABaVE8A0M7NAL27uQBHQTsA+Pj4APn4+ADl5eQA5uXkAPz8+wBMRkEA6+rqADozLQCwrasA2NfWANnX1gCLh4MAs7GuAD84MwDLycgAVU9KAPTz8wDh4N8Ag357AEhBPACrqKYAcGtnADUuKACYlZIAXVhTAJmVkgDU0tEA/Pz8AP38/ADq6egA19bUAGNdWQA9NzEAeXRwALSxrwDv7u4AZmFcAMnIxgCPi4cAQzw3AGtmYgBZU04AlJCNAEZAOgCBfXkA5eTjADQtJgCqp6QAS0VAAExFQAA5MiwAYVxXAJ2ZlgCKhoIA7e3sAD43MgDKyMcAj4uIAFROSQC3tbMA8/LyAKWinwDg394A9vb1AIJ9egDl5OQANC0nADUtJwCYlJEAwL68APv7+wD8+/sArquoANbV0wA5Mi0APDYwAHdzbwDu7e0As7CuAHhzbwBlYFsA29rZANza2QCOioYA8fHwAEI7NgDh398ART85APb29gC7ubcAqaajAOTj4gAzLCUA0dDOAPr6+QA4MSsAc25qAJuYlQBgW1YA1tXUAGFbVgDEwsAAiYWBAP///wCxr6wA7OzrAKGdmwBTTUgAQDo0AEE6NAC3tLIA397dAPX19ADk4+MAMywmAJaTkABbVlEA+vr6AElDPQC/vbsA+/r6AOfn5gBybWgA6OfmADs1LwB3cm4APDUvALKvrQDt7OwAn5yZANvZ2ADIxsQA8PDvAHx3dABpZGAApaGfAJKOiwBXUUwAzcvKALq4tgD19fUAqKWiAPn5+ABJQz4ASkM+AHJtaQA3MCoAmpeUAE1HQQD+/v4Aw8G/ALCuqwDr6+oAZV9bAD85MwC2s7EAe3ZyAPHw8ABAOTMAo6CdAGhjXgDe3dwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAClpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpcpAQEBAQEBAQH+3tqWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpZfS0hAQEBAQEEMIfKWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlPgzVSn6AgICAgYCAgIB1n4xGR6WlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWli8dsJSUlJSUlJSUlJSUlJSWw0aWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlP7W9jIyMjGA2kwjVjIyMjIymSKWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaVrzriFpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaVrzSeEpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaVrzSeEpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaVrzieEpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpTu/q8+EpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlfZiCV7KAms/MD9OlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWldMclnVDdZT0nX9+lpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlszsYGERBbyONw1KXycmvpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaVrzSeEyo6wJSUUpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaVrzSdChDzLmJg1paWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaVrzSeEpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaVrzSeEpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaVrzriFpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWtPRUBR4SlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaUewQ6RVFRFld00BZCzpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlWcieRTPQVsZkqVQlgGm7NaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlTJWJEbvXoaWlClMJIV0DbaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlH1Qas7aS06Wl0yLTpTe6oCnIpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpZK93jh7paWlpaWlpaWlpWuydQPXeqWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpbVw3MTIpaWlpaWlpaWlpVlrKo0To6WlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpcUlBj+lpaWl31VosYKGTqWlpXmAkaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpXdUHKWlpaXfcWxFiNDQMJalLXNweaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpdSrjhKlpaU2mqTIdiyiS4eldMcgXKWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpb4H2JulpaUWJQylpaVJEzul06idagulpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpSbQDbOlpaUFgJ5GLm3Hqg6lpZRRok6lpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpRawv6WlpaUSilQlJVS8cpylC6xwd6WlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpXxDZ2MXrqWlpwIZMmDUIqVYZh2dg6WlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpdNkORNlFKWlpaWlpaWlpaW9sCs2wqWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaVPKCReBNtZADWlpVmtvtZqsDSlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpT4ngGLatLKPC5dDG8clVhelpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWhamm8TXAxL2VlZ24auaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlQsDIW0l4TTrZ25mEpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpSJhYcJapaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAAAAIAAAAEAAAAABAAgAAAAAAAAEAAAAAAAAAAAAAAABAAAAAAAAVVBKAMvKyAD09PMA4+LiAFtVUAD5+fkA+vn5AOfm5QBgWlYATUdCAIiEgQDs6+sAY15ZANnY1wCfm5gAUUtFAMfFwwCMiIQAtLKvAKOgngCkoJ4AVlBLAH96dgDQzswA+Pj3AElCPQCEf3wAcWxoADYvKQDn5uYArKmnANTT0gBfWVQA/f39AFFLRgB5dXEA8O/vAN3c2wDLyccA8/PyAJWRjgBaVE8A0M7NAPn4+ADl5eQA5uXkAF9ZVQBMRkEAOTMtAOvq6gCdmpcA2dfWAJ6alwDGxMIAs7GuAMvJyACQjIkAuba0APf39gCDfnsAq6imAHBrZwDBv70A/Pz8AOnp6AA6My4AxsTDAIuHhABQSkUAtLGvAO/u7gDKyMYAbGZiAFhTTgBZU04A5eTjAKqnpABvamUA0tHPADkyLACdmZYAxcPBAO7t7ABnYV0Aj4uIAFROSQDy8vIAuLWzAPb29QBvamYAXFdSANPR0ABdV1IAwL68AOjo5wCuq6gAeHNvAO7t7QCzsK4AoJ2aANza2QDx8fAAtrSxAFhSTQD29vYAu7m3AG5pZABKRD8AODErAK6rqQBzbmoA1tXUAMTCwAD///8AdnJtAOzs6wBmYFwAU01IAMnHxgB7d3MA8vHxALe0sgB8d3MA397dAEY/OgDk4+MAW1ZRAFxWUQC/vbsAxMLBAE5IQwB3cm4AZF9aAI2JhQCloZ8AV1FMAEQ+OAD19fUAuri2ANDPzQDo5+cA1tTTAE1HQQD+/v4Aw8G/AP/+/gB1cWwA6+vqAOzr6gBlX1sAUkxHAHp2cgDx8PAAaGNeAN7d3AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxGActLS0tLFJxcXFxcXFxcXFxcXFxcXFxcXFxcXFxiWU+Io4JCQlrFguYIXFxcXFxcXFxcXFxcXFxcXFxcXE0BHVBMGwcT0+IfhuUcXFxcXFxcXFxcXFxcXFxcXFxcWSQUUJ2OGddEDVwARhxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXE2dGhxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcTZ0aHFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxj3EdhXRocXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFfYGovBDcxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcV0oXTx8bhMmJiRxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxNoRlFEkgKnFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFidGiJlHMGcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcWJ0aHFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxbQSLeHFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXErXTKEGSI9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"><style>.sf-hidden{display:none!important}</style><meta http-equiv=content-security-policy content="default-src 'none'; font-src 'self' data:; img-src 'self' data:; style-src 'unsafe-inline'; media-src 'self' data:; script-src 'unsafe-inline' data:; object-src 'self' data:; frame-src 'self' data:;"><style>img[src="data:,"],source[src="data:,"]{display:none!important}</style></head>
+ <body data-theme=light>
+ 
+ 
+<svg xmlns=http://www.w3.org/2000/svg style=display:none>
+ <symbol id=svg-toc viewBox="0 0 24 24">
+ <title>Contents</title>
+ <svg stroke=currentColor fill=currentColor stroke-width=0 viewBox="0 0 1024 1024">
+ <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"></path>
+ </svg>
+ </symbol>
+ <symbol id=svg-menu viewBox="0 0 24 24">
+ <title>Menu</title>
+ <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class=feather-menu>
+ <line x1=3 y1=12 x2=21 y2=12></line>
+ <line x1=3 y1=6 x2=21 y2=6></line>
+ <line x1=3 y1=18 x2=21 y2=18></line>
+ </svg>
+ </symbol>
+ <symbol id=svg-arrow-right viewBox="0 0 24 24">
+ <title>Expand</title>
+ <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=2 stroke-linecap=round stroke-linejoin=round class=feather-chevron-right>
+ <polyline points="9 18 15 12 9 6"></polyline>
+ </svg>
+ </symbol>
+ <symbol id=svg-sun viewBox="0 0 24 24">
+ <title>Light mode</title>
+ <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class=feather-sun>
+ <circle cx=12 cy=12 r=5></circle>
+ <line x1=12 y1=1 x2=12 y2=3></line>
+ <line x1=12 y1=21 x2=12 y2=23></line>
+ <line x1=4.22 y1=4.22 x2=5.64 y2=5.64></line>
+ <line x1=18.36 y1=18.36 x2=19.78 y2=19.78></line>
+ <line x1=1 y1=12 x2=3 y2=12></line>
+ <line x1=21 y1=12 x2=23 y2=12></line>
+ <line x1=4.22 y1=19.78 x2=5.64 y2=18.36></line>
+ <line x1=18.36 y1=5.64 x2=19.78 y2=4.22></line>
+ </svg>
+ </symbol>
+ <symbol id=svg-moon viewBox="0 0 24 24">
+ <title>Dark mode</title>
+ <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class=icon-tabler-moon>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+ </svg>
+ </symbol>
+ <symbol id=svg-sun-half viewBox="0 0 24 24">
+ <title>Auto light/dark mode</title>
+ <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 24 24" fill=none stroke=currentColor stroke-width=1.5 stroke-linecap=round stroke-linejoin=round class=icon-tabler-shadow>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <circle cx=12 cy=12 r=9></circle>
+ <path d="M13 12h5"></path>
+ <path d="M13 15h4"></path>
+ <path d="M13 18h1"></path>
+ <path d="M13 9h4"></path>
+ <path d="M13 6h1"></path>
+ </svg>
+ </symbol>
+</svg>
+<input type=checkbox class="sidebar-toggle sf-hidden" name=__navigation id=__navigation>
+<input type=checkbox class="sidebar-toggle sf-hidden" name=__toc id=__toc>
+<label class="overlay sidebar-overlay sf-hidden" for=__navigation>
+ 
+</label>
+<label class="overlay toc-overlay sf-hidden" for=__toc>
+ 
+</label>
+<div class=page>
+ <header class="mobile-header scrolled sf-hidden">
+ 
+ 
+ 
+ </header>
+ <aside class=sidebar-drawer>
+ <div class=sidebar-container>
+ 
+ <div class=sidebar-sticky><a class=sidebar-brand href=https://flower.ai/docs/framework/index.html>
+ 
+ <div class=sidebar-logo-container>
+ <img class=sidebar-logo src="data:image/png;base64,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OzcBU/vpR3A1+AJa6KIgp1Q7J4H2CrvUHJkq3881cB+IjDAAEhERETmGo4CJiIiIHMMASEREROQYBkAiIiIixzAAEhERETmGAZCIiIjIMQyARERERI5hACQiIiJyDAMgERERkWMYAImIiIgcwwBIRERE5BgGQCIiIiLHMAASEREROYYBkIiIiMgxDIBEREREjmEAJCIiInIMAyARERGRYxgAiYiIiBzDAEhERETkGAZAIiIiIscwABIRERE5hgGQiIiIyDEMgERERESOYQAkIiIicgwDIBEREZFjGACJiIiIHMMASEREROQYBkAiIiIixzAAEhERETmGAZCIiIjIMQyARERERI5hACQiIiJyDAMgERERkWMYAImIiIgcwwBIRERE5BgGQCIiIiLHMAASEREROYYBkIiIiMgxDIBEREREjmEAJCIiInIMAyARERGRYxgAiYiIiBzDAEhERETkGAZAIiIiIscwABIRERE5hgGQiIiIyDEMgERERESOYQAkIiIicgwDIBEREZFjGACJiIiIHMMASEREROQYBkAiIiIixzAAEhERETmGAZCIiIjIMQyARERERI5hACQiIiJyDAMgERERkWMYAImIiIgcwwBIRKn3QvIAAAFzSURBVERE5BgGQCIiIiLHMAASEREROYYBkIiIiMgxDIBEREREjmEAJCIiInIMAyARERGRYxgAiYiIiBzDAEhERETkGAZAIiIiIscwABIRERE5hgGQiIiIyDEMgERERESOYQAkIiIicgwDIBEREZFjGACJiIiIHMMASEREROQYBkAiIiIixzAAEhERETmGAZCIiIjIMQyARERERI5hACQiIiJyDAMgERERkWMYAImIiIgcwwBIRERE5BgGQCIiIiLHMAASEREROYYBkIiIiMgxDIBEREREjmEAJCIiInIMAyARERGRYxgAiYiIiBzDAEhERETkGAZAIiIiIscwABIRERE5hgGQiIiIyDEMgERERESOYQAkIiIicgwDIBEREZFjGACJiIiIHMMASEREROQYBkAiIiIixzAAEhERETmGAZCIiIjIMQyARERERI5hACQiIiJyDAMgERERkWMYAImIiIgcwwBIRERE5BgGQCIiIiLH/H+3N281YmVD7QAAAABJRU5ErkJggg==" alt=Logo>
+ </div>
+ 
+ <span class=sidebar-brand-text>main</span>
+ 
+</a><form class=sidebar-search-container action=search.html role=search>
+ <input class=sidebar-search placeholder=Search name=q aria-label=Search value>
+ 
+ 
+</form>
+<div id=searchbox></div><div class=sidebar-scroll><div class=sidebar-tree>
+ <p class=caption role=heading><span class=caption-text>Tutorial</span></p>
+<ul class=current>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-series-what-is-federated-learning.html>What is Federated Learning?</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-series-get-started-with-flower-pytorch.html>Get started with Flower</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-series-use-a-federated-learning-strategy-pytorch.html>Use a federated learning strategy</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-series-build-a-strategy-from-scratch-pytorch.html>Build a strategy from scratch</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href=#>Customize the client</a></li>
+</ul>
+<p class=caption role=heading><span class=caption-text>Quickstart tutorials</span></p>
+<ul>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-quickstart-pytorch.html>Quickstart PyTorch</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-quickstart-tensorflow.html>Quickstart TensorFlow</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-quickstart-huggingface.html>Quickstart 🤗 Transformers</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-quickstart-jax.html>Quickstart JAX</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-quickstart-pandas.html>Quickstart Pandas</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-quickstart-fastai.html>Quickstart fastai</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-quickstart-pytorch-lightning.html>Quickstart PyTorch Lightning</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-quickstart-mxnet.html>Quickstart MXNet</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-quickstart-scikitlearn.html>Quickstart scikit-learn</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-quickstart-xgboost.html>Quickstart XGBoost</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-quickstart-android.html>Quickstart Android</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/tutorial-quickstart-ios.html>Quickstart iOS</a></li>
+</ul>
+<p class=caption role=heading><span class=caption-text>How-to guides</span></p>
+<ul>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/how-to-install-flower.html>Install Flower</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/how-to-configure-clients.html>Configure clients</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/how-to-use-strategies.html>Use strategies</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/how-to-implement-strategies.html>Implement strategies</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/how-to-aggregate-evaluation-results.html>Aggregate evaluation results</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/how-to-save-and-load-model-checkpoints.html>Save and load model checkpoints</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/how-to-run-simulations.html>Run simulations</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/how-to-monitor-simulation.html>Monitor simulation</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/how-to-configure-logging.html>Configure logging</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/how-to-enable-ssl-connections.html>Enable SSL connections</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/how-to-upgrade-to-flower-1.0.html>Upgrade to Flower 1.0</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/how-to-use-built-in-mods.html>Use Built-in Mods</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/how-to-run-flower-using-docker.html>Run Flower using Docker</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/how-to-use-differential-privacy.html>Use Differential Privacy</a></li>
+</ul>
+<p class=caption role=heading><span class=caption-text>Legacy example guides</span></p>
+<ul>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/example-walkthrough-pytorch-mnist.html>Example: Walk-Through PyTorch &amp; MNIST</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/example-pytorch-from-centralized-to-federated.html>Example: PyTorch - From Centralized To Federated</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/example-mxnet-walk-through.html>Example: MXNet - Run MXNet Federated</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/example-jax-from-centralized-to-federated.html>Example: JAX - Run JAX Federated</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/example-fedbn-pytorch-from-centralized-to-federated.html>Example: FedBN in PyTorch - From Centralized To Federated</a></li>
+</ul>
+<p class=caption role=heading><span class=caption-text>Explanations</span></p>
+<ul>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/explanation-federated-evaluation.html>Federated evaluation</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/explanation-differential-privacy.html>Differential Privacy</a></li>
+</ul>
+<p class=caption role=heading><span class=caption-text>API reference</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href=https://flower.ai/docs/framework/ref-api/flwr.html>flwr</a><input class="toctree-checkbox sf-hidden" id=toctree-checkbox-1 name=toctree-checkbox-1 role=switch type=checkbox><label for=toctree-checkbox-1><div class=visually-hidden>Toggle navigation of flwr</div><i class=icon><svg><use href=#svg-arrow-right></use></svg></i></label><ul class=sf-hidden>
+</ul>
+</li>
+</ul>
+<ul>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/ref-api-cli.html>Flower CLI reference</a></li>
+</ul>
+<p class=caption role=heading><span class=caption-text>Reference docs</span></p>
+<ul>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/ref-example-projects.html>Example projects</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/ref-telemetry.html>Telemetry</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/ref-changelog.html>Changelog</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/ref-faq.html>FAQ</a></li>
+</ul>
+<p class=caption role=heading><span class=caption-text>Contributor tutorials</span></p>
+<ul>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/contributor-tutorial-contribute-on-github.html>Contribute on GitHub</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/contributor-tutorial-get-started-as-a-contributor.html>Get started as a contributor</a></li>
+</ul>
+<p class=caption role=heading><span class=caption-text>Contributor how-to guides</span></p>
+<ul>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/contributor-how-to-install-development-versions.html>Install development versions</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/contributor-how-to-set-up-a-virtual-env.html>Set up a virtual env</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/contributor-how-to-develop-in-vscode-dev-containers.html>Develop in VSCode Dev Containers</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/contributor-how-to-create-new-messages.html>Creating New Messages</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/contributor-how-to-write-documentation.html>Write documentation</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/contributor-how-to-release-flower.html>Release Flower</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/contributor-how-to-contribute-translations.html>Contribute translations</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/contributor-how-to-build-docker-images.html>How to build Docker Flower images locally</a></li>
+</ul>
+<p class=caption role=heading><span class=caption-text>Contributor explanations</span></p>
+<ul>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/contributor-explanation-architecture.html>Flower Architecture</a></li>
+</ul>
+<p class=caption role=heading><span class=caption-text>Contributor references</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href=https://flower.ai/docs/framework/fed/index.html>FED - Flower Enhancement Doc</a><input class="toctree-checkbox sf-hidden" id=toctree-checkbox-8 name=toctree-checkbox-8 role=switch type=checkbox><label for=toctree-checkbox-8><div class=visually-hidden>Toggle navigation of FED - Flower Enhancement Doc</div><i class=icon><svg><use href=#svg-arrow-right></use></svg></i></label><ul class=sf-hidden>
+</ul>
+</li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/contributor-ref-good-first-contributions.html>Good first contributions</a></li>
+<li class=toctree-l1><a class="reference internal" href=https://flower.ai/docs/framework/contributor-ref-secure-aggregation-protocols.html>Secure Aggregation Protocols</a></li>
+</ul>
+</div></div>
+<style class=sf-hidden>.lbl-toggle{display:block;padding:1rem;cursor:pointer;border-radius:7px;transition:all 0.25s ease-out}.lbl-toggle::before{content:" ";display:inline-block;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:5px solid currentColor;vertical-align:middle;margin-right:.7rem;transform:translateY(-2px);transition:transform .2s ease-out}.collapsible-content{max-height:0px;padding-top:0px;overflow:hidden;transition:max-height .25s ease-in-out}.toggle:checked+.lbl-toggle+.collapsible-content{max-height:100vh}.toggle:checked+.lbl-toggle::before{transform:rotate(90deg) translateX(-3px)}.toggle:checked+.lbl-toggle{border-bottom-right-radius:0;border-bottom-left-radius:0}.content-inner{padding-bottom:1rem}</style>
+<div class=wrap-collabsible>
+ <input id=collapsible class="toggle sf-hidden" type=checkbox>
+ <label for=collapsible class=lbl-toggle>Versions</label>
+ <div class=collapsible-content>
+ <div class=content-inner>
+ <ul>
+ <li>
+ <a href=javascript:void(0) style=text-decoration:none>
+ v1.5.0
+ </a>
+ </li>
+ <li>
+ <a href=javascript:void(0) style=text-decoration:none>
+ v1.6.0
+ </a>
+ </li>
+ <li>
+ <a href=javascript:void(0) style=text-decoration:none>
+ v1.7.0
+ </a>
+ </li>
+ <li>
+ <a href=javascript:void(0) style=text-decoration:none>
+ main
+ </a>
+ </li>
+ </ul>
+ </div>
+ </div>
+</div>
+ 
+ <div style=text-align:center;padding-bottom:1rem>
+ <a href=https://flower.ai/docs/framework/main/en/tutorial-series-customize-the-client-pytorch.html style=text-decoration:none;padding-right:2rem;font-size:150%>🇬🇧</a>
+ <a href=https://flower.ai/docs/framework/main/fr/tutorial-series-customize-the-client-pytorch.html style=text-decoration:none;padding-right:2rem;font-size:150%>🇫🇷</a>
+ <a href=https://flower.ai/docs/framework/main/zh_Hans/tutorial-series-customize-the-client-pytorch.html style=text-decoration:none;font-size:150%>🇨🇳</a>
+ </div>
+ </div>
+ 
+ </div>
+ </aside>
+ <div class=main>
+ <div class=content>
+ <div class=article-container>
+ <a href=# class="back-to-top muted-link">
+ <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 24 24">
+ <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+ </svg>
+ <span>Back to top</span>
+ </a>
+ <div class=content-icon-container>
+ 
+<div class="theme-toggle-container theme-toggle-content">
+ <button class=theme-toggle>
+ <div class=visually-hidden>Toggle Light / Dark / Auto color theme</div>
+ <svg class=theme-icon-when-auto><use href=#svg-sun-half></use></svg>
+ <svg class=theme-icon-when-dark><use href=#svg-moon></use></svg>
+ <svg class=theme-icon-when-light><use href=#svg-sun></use></svg>
+ </button>
+ </div>
+ <label class="toc-overlay-icon toc-content-icon sf-hidden" for=__toc>
+ 
+ 
+ </label>
+ </div>
+ <article role=main>
+ <br>
+<a href=https://colab.research.google.com/github/adap/flower/blob/main/doc/source/tutorial-series-customize-the-client-pytorch.ipynb>
+ <img alt="Open in Colab" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTE3IiBoZWlnaHQ9IjIwIj48bGluZWFyR3JhZGllbnQgaWQ9ImIiIHgyPSIwIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PC9saW5lYXJHcmFkaWVudD48Y2xpcFBhdGggaWQ9ImEiPjxyZWN0IHdpZHRoPSIxMTciIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjYSkiPjxwYXRoIGZpbGw9IiM1NTUiIGQ9Ik0wIDBoMzB2MjBIMHoiLz48cGF0aCBmaWxsPSIjMDA3ZWM2IiBkPSJNMzAgMGg4N3YyMEgzMHoiLz48cGF0aCBmaWxsPSJ1cmwoI2IpIiBkPSJNMCAwaDExN3YyMEgweiIvPjwvZz48ZyBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMTAiPjxzdmcgeD0iNHB4IiB5PSIwcHgiIHdpZHRoPSIyMnB4IiBoZWlnaHQ9IjIwcHgiIHZpZXdCb3g9Ii0yIDAgMjggMjQiIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiAjZmZmO2JvcmRlci1yYWRpdXM6IDFweDsiPjxwYXRoIHN0eWxlPSJmaWxsOiNlODcxMGE7IiBkPSJNMS45NzcsMTYuNzdjLTIuNjY3LTIuMjc3LTIuNjA1LTcuMDc5LDAtOS4zNTdDMi45MTksOC4wNTcsMy41MjIsOS4wNzUsNC40OSw5LjY5MWMtMS4xNTIsMS42LTEuMTQ2LDMuMjAxLTAuMDA0LDQuODAzQzMuNTIyLDE1LjExMSwyLjkxOCwxNi4xMjYsMS45NzcsMTYuNzd6Ii8+PHBhdGggc3R5bGU9ImZpbGw6I2Y5YWIwMDsiIGQ9Ik0xMi4yNTcsMTcuMTE0Yy0xLjc2Ny0xLjYzMy0yLjQ4NS0zLjY1OC0yLjExOC02LjAyYzAuNDUxLTIuOTEsMi4xMzktNC44OTMsNC45NDYtNS42NzhjMi41NjUtMC43MTgsNC45NjQtMC4yMTcsNi44NzgsMS44MTljLTAuODg0LDAuNzQzLTEuNzA3LDEuNTQ3LTIuNDM0LDIuNDQ2QzE4LjQ4OCw4LjgyNywxNy4zMTksOC40MzUsMTYsOC44NTZjLTIuNDA0LDAuNzY3LTMuMDQ2LDMuMjQxLTEuNDk0LDUuNjQ0Yy0wLjI0MSwwLjI3NS0wLjQ5MywwLjU0MS0wLjcyMSwwLjgyNkMxMy4yOTUsMTUuOTM5LDEyLjUxMSwxNi4zLDEyLjI1NywxNy4xMTR6Ii8+PHBhdGggc3R5bGU9ImZpbGw6I2U4NzEwYTsiIGQ9Ik0xOS41MjksOS42ODJjMC43MjctMC44OTksMS41NS0xLjcwMywyLjQzNC0yLjQ0NmMyLjcwMywyLjc4MywyLjcwMSw3LjAzMS0wLjAwNSw5Ljc2NGMtMi42NDgsMi42NzQtNi45MzYsMi43MjUtOS43MDEsMC4xMTVjMC4yNTQtMC44MTQsMS4wMzgtMS4xNzUsMS41MjgtMS43ODhjMC4yMjgtMC4yODUsMC40OC0wLjU1MiwwLjcyMS0wLjgyNmMxLjA1MywwLjkxNiwyLjI1NCwxLjI2OCwzLjYsMC44M0MyMC41MDIsMTQuNTUxLDIxLjE1MSwxMS45MjcsMTkuNTI5LDkuNjgyeiIvPjxwYXRoIHN0eWxlPSJmaWxsOiNmOWFiMDA7IiBkPSJNNC40OSw5LjY5MUMzLjUyMiw5LjA3NSwyLjkxOSw4LjA1NywxLjk3Nyw3LjQxM2MyLjIwOS0yLjM5OCw1LjcyMS0yLjk0Miw4LjQ3Ni0xLjM1NWMwLjU1NSwwLjMyLDAuNzE5LDAuNjA2LDAuMjg1LDEuMTI4Yy0wLjE1NywwLjE4OC0wLjI1OCwwLjQyMi0wLjM5MSwwLjYzMWMtMC4yOTksMC40Ny0wLjUwOSwxLjA2Ny0wLjkyOSwxLjM3MUM4LjkzMyw5LjUzOSw4LjUyMyw4Ljg0Nyw4LjAyMSw4Ljc0NkM2LjY3Myw4LjQ3NSw1LjUwOSw4Ljc4Nyw0LjQ5LDkuNjkxeiIvPjxwYXRoIHN0eWxlPSJmaWxsOiNmOWFiMDA7IiBkPSJNMS45NzcsMTYuNzdjMC45NDEtMC42NDQsMS41NDUtMS42NTksMi41MDktMi4yNzdjMS4zNzMsMS4xNTIsMi44NSwxLjQzMyw0LjQ1LDAuNDk5YzAuMzMyLTAuMTk0LDAuNTAzLTAuMDg4LDAuNjczLDAuMTljMC4zODYsMC42MzUsMC43NTMsMS4yODUsMS4xODEsMS44OWMwLjM0LDAuNDgsMC4yMjIsMC43MTUtMC4yNTMsMS4wMDZDNy44NCwxOS43Myw0LjIwNSwxOS4xODgsMS45NzcsMTYuNzd6Ii8+PC9zdmc+PHRleHQgeD0iMjQ1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiB0ZXh0TGVuZ3RoPSIzMCI+IDwvdGV4dD48dGV4dCB4PSI3MjUiIHk9IjE1MCIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9Ijc3MCI+T3BlbiBpbiBDb2xhYjwvdGV4dD48dGV4dCB4PSI3MjUiIHk9IjE0MCIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9Ijc3MCI+T3BlbiBpbiBDb2xhYjwvdGV4dD48L2c+IDwvc3ZnPgo=">
+</a><section id=Customize-the-client>
+<h1>Customize the client<a class=headerlink href=#Customize-the-client title="Permalink to this heading">#</a></h1>
+<p>Welcome to the fourth part of the Flower federated learning tutorial. In the previous parts of this tutorial, we introduced federated learning with PyTorch and Flower (<a class="reference external" href=https://flower.ai/docs/framework/tutorial-get-started-with-flower-pytorch.html>part 1</a>), we learned how strategies can be used to customize the execution on both the server and the clients (<a class="reference external" href=https://flower.ai/docs/framework/tutorial-use-a-federated-learning-strategy-pytorch.html>part 2</a>), and we built our own custom
+strategy from scratch (<a class="reference external" href=https://flower.ai/docs/framework/tutorial-build-a-strategy-from-scratch-pytorch.html>part 3</a>).</p>
+<p>In this notebook, we revisit <code class="docutils literal notranslate"><span class=pre>NumPyClient</span></code> and introduce a new baseclass for building clients, simply named <code class="docutils literal notranslate"><span class=pre>Client</span></code>. In previous parts of this tutorial, we’ve based our client on <code class="docutils literal notranslate"><span class=pre>NumPyClient</span></code>, a convenience class which makes it easy to work with machine learning libraries that have good NumPy interoperability. With <code class="docutils literal notranslate"><span class=pre>Client</span></code>, we gain a lot of flexibility that we didn’t have before, but we’ll also have to do a few things the we didn’t have to do before.</p>
+<blockquote>
+<div><p><a class="reference external" href=https://github.com/adap/flower>Star Flower on GitHub</a> ⭐️ and join the Flower community on Slack to connect, ask questions, and get help: <a class="reference external" href=https://flower.ai/join-slack>Join Slack</a> 🌼 We’d love to hear from you in the <code class="docutils literal notranslate"><span class=pre>#introductions</span></code> channel! And if anything is unclear, head over to the <code class="docutils literal notranslate"><span class=pre>#questions</span></code> channel.</p>
+</div></blockquote>
+<p>Let’s go deeper and see what it takes to move from <code class="docutils literal notranslate"><span class=pre>NumPyClient</span></code> to <code class="docutils literal notranslate"><span class=pre>Client</span></code>!</p>
+<section id=Step-0:-Preparation>
+<h2>Step 0: Preparation<a class=headerlink href=#Step-0:-Preparation title="Permalink to this heading">#</a></h2>
+<p>Before we begin with the actual code, let’s make sure that we have everything we need.</p>
+<section id=Installing-dependencies>
+<h3>Installing dependencies<a class=headerlink href=#Installing-dependencies title="Permalink to this heading">#</a></h3>
+<p>First, we install the necessary packages:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class=highlight><pre id=codecell0><span></span>[ ]:
+</pre><button class="copybtn o-tooltip--left sf-hidden" data-tooltip=Copy data-clipboard-target=#codecell0>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class=highlight><pre id=codecell1><span></span>!pip install -q flwr[simulation] torch torchvision scipy
+</pre><button class="copybtn o-tooltip--left" data-tooltip=Copy data-clipboard-target=#codecell1>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+</div>
+<p>Now that we have all dependencies installed, we can import everything we need for this tutorial:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class=highlight><pre id=codecell2><span></span>[ ]:
+</pre><button class="copybtn o-tooltip--left sf-hidden" data-tooltip=Copy data-clipboard-target=#codecell2>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class=highlight><pre id=codecell3><span></span>from collections import OrderedDict
+from typing import Dict, List, Optional, Tuple
+
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torchvision.transforms as transforms
+from torch.utils.data import DataLoader, random_split
+from torchvision.datasets import CIFAR10
+
+import flwr as fl
+
+DEVICE = torch.device("cpu")  # Try "cuda" to train on GPU
+print(
+    f"Training on {DEVICE} using PyTorch {torch.__version__} and Flower {fl.__version__}"
+)
+</pre><button class="copybtn o-tooltip--left" data-tooltip=Copy data-clipboard-target=#codecell3>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+</div>
+<p>It is possible to switch to a runtime that has GPU acceleration enabled (on Google Colab: <code class="docutils literal notranslate"><span class=pre>Runtime</span> <span class=pre>&gt;</span> <span class=pre>Change</span> <span class=pre>runtime</span> <span class=pre>type</span> <span class=pre>&gt;</span> <span class=pre>Hardware</span> <span class=pre>acclerator:</span> <span class=pre>GPU</span> <span class=pre>&gt;</span> <span class=pre>Save</span></code>). Note, however, that Google Colab is not always able to offer GPU acceleration. If you see an error related to GPU availability in one of the following sections, consider switching back to CPU-based execution by setting <code class="docutils literal notranslate"><span class=pre>DEVICE</span> <span class=pre>=</span> <span class=pre>torch.device("cpu")</span></code>. If the runtime has GPU acceleration enabled, you should see the output
+<code class="docutils literal notranslate"><span class=pre>Training</span> <span class=pre>on</span> <span class=pre>cuda</span></code>, otherwise it’ll say <code class="docutils literal notranslate"><span class=pre>Training</span> <span class=pre>on</span> <span class=pre>cpu</span></code>.</p>
+</section>
+<section id=Data-loading>
+<h3>Data loading<a class=headerlink href=#Data-loading title="Permalink to this heading">#</a></h3>
+<p>Let’s now load the CIFAR-10 training and test set, partition them into ten smaller datasets (each split into training and validation set), and wrap everything in their own <code class="docutils literal notranslate"><span class=pre>DataLoader</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class=highlight><pre id=codecell4><span></span>[ ]:
+</pre><button class="copybtn o-tooltip--left sf-hidden" data-tooltip=Copy data-clipboard-target=#codecell4>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class=highlight><pre id=codecell5><span></span>NUM_CLIENTS = 10
+
+
+def load_datasets(num_clients: int):
+    # Download and transform CIFAR-10 (train and test)
+    transform = transforms.Compose(
+        [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
+    )
+    trainset = CIFAR10("./dataset", train=True, download=True, transform=transform)
+    testset = CIFAR10("./dataset", train=False, download=True, transform=transform)
+
+    # Split training set into `num_clients` partitions to simulate different local datasets
+    partition_size = len(trainset) // num_clients
+    lengths = [partition_size] * num_clients
+    datasets = random_split(trainset, lengths, torch.Generator().manual_seed(42))
+
+    # Split each partition into train/val and create DataLoader
+    trainloaders = []
+    valloaders = []
+    for ds in datasets:
+        len_val = len(ds) // 10  # 10 % validation set
+        len_train = len(ds) - len_val
+        lengths = [len_train, len_val]
+        ds_train, ds_val = random_split(ds, lengths, torch.Generator().manual_seed(42))
+        trainloaders.append(DataLoader(ds_train, batch_size=32, shuffle=True))
+        valloaders.append(DataLoader(ds_val, batch_size=32))
+    testloader = DataLoader(testset, batch_size=32)
+    return trainloaders, valloaders, testloader
+
+
+trainloaders, valloaders, testloader = load_datasets(NUM_CLIENTS)
+</pre><button class="copybtn o-tooltip--left" data-tooltip=Copy data-clipboard-target=#codecell5>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+</div>
+</section>
+<section id=Model-training/evaluation>
+<h3>Model training/evaluation<a class=headerlink href=#Model-training/evaluation title="Permalink to this heading">#</a></h3>
+<p>Let’s continue with the usual model definition (including <code class="docutils literal notranslate"><span class=pre>set_parameters</span></code> and <code class="docutils literal notranslate"><span class=pre>get_parameters</span></code>), training and test functions:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class=highlight><pre id=codecell6><span></span>[ ]:
+</pre><button class="copybtn o-tooltip--left sf-hidden" data-tooltip=Copy data-clipboard-target=#codecell6>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class=highlight><pre id=codecell7><span></span>class Net(nn.Module):
+    def __init__(self) -&gt; None:
+        super(Net, self).__init__()
+        self.conv1 = nn.Conv2d(3, 6, 5)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
+
+    def forward(self, x: torch.Tensor) -&gt; torch.Tensor:
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = x.view(-1, 16 * 5 * 5)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+
+
+def get_parameters(net) -&gt; List[np.ndarray]:
+    return [val.cpu().numpy() for _, val in net.state_dict().items()]
+
+
+def set_parameters(net, parameters: List[np.ndarray]):
+    params_dict = zip(net.state_dict().keys(), parameters)
+    state_dict = OrderedDict({k: torch.Tensor(v) for k, v in params_dict})
+    net.load_state_dict(state_dict, strict=True)
+
+
+def train(net, trainloader, epochs: int):
+    """Train the network on the training set."""
+    criterion = torch.nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(net.parameters())
+    net.train()
+    for epoch in range(epochs):
+        correct, total, epoch_loss = 0, 0, 0.0
+        for images, labels in trainloader:
+            images, labels = images.to(DEVICE), labels.to(DEVICE)
+            optimizer.zero_grad()
+            outputs = net(images)
+            loss = criterion(net(images), labels)
+            loss.backward()
+            optimizer.step()
+            # Metrics
+            epoch_loss += loss
+            total += labels.size(0)
+            correct += (torch.max(outputs.data, 1)[1] == labels).sum().item()
+        epoch_loss /= len(trainloader.dataset)
+        epoch_acc = correct / total
+        print(f"Epoch {epoch+1}: train loss {epoch_loss}, accuracy {epoch_acc}")
+
+
+def test(net, testloader):
+    """Evaluate the network on the entire test set."""
+    criterion = torch.nn.CrossEntropyLoss()
+    correct, total, loss = 0, 0, 0.0
+    net.eval()
+    with torch.no_grad():
+        for images, labels in testloader:
+            images, labels = images.to(DEVICE), labels.to(DEVICE)
+            outputs = net(images)
+            loss += criterion(outputs, labels).item()
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+    loss /= len(testloader.dataset)
+    accuracy = correct / total
+    return loss, accuracy
+</pre><button class="copybtn o-tooltip--left" data-tooltip=Copy data-clipboard-target=#codecell7>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+</div>
+</section>
+</section>
+<section id=Step-1:-Revisiting-NumPyClient>
+<h2>Step 1: Revisiting NumPyClient<a class=headerlink href=#Step-1:-Revisiting-NumPyClient title="Permalink to this heading">#</a></h2>
+<p>So far, we’ve implemented our client by subclassing <code class="docutils literal notranslate"><span class=pre>flwr.client.NumPyClient</span></code>. The three methods we implemented are <code class="docutils literal notranslate"><span class=pre>get_parameters</span></code>, <code class="docutils literal notranslate"><span class=pre>fit</span></code>, and <code class="docutils literal notranslate"><span class=pre>evaluate</span></code>. Finally, we wrap the creation of instances of this class in a function called <code class="docutils literal notranslate"><span class=pre>client_fn</span></code>:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class=highlight><pre id=codecell8><span></span>[ ]:
+</pre><button class="copybtn o-tooltip--left sf-hidden" data-tooltip=Copy data-clipboard-target=#codecell8>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class=highlight><pre id=codecell9><span></span>class FlowerNumPyClient(fl.client.NumPyClient):
+    def __init__(self, cid, net, trainloader, valloader):
+        self.cid = cid
+        self.net = net
+        self.trainloader = trainloader
+        self.valloader = valloader
+
+    def get_parameters(self, config):
+        print(f"[Client {self.cid}] get_parameters")
+        return get_parameters(self.net)
+
+    def fit(self, parameters, config):
+        print(f"[Client {self.cid}] fit, config: {config}")
+        set_parameters(self.net, parameters)
+        train(self.net, self.trainloader, epochs=1)
+        return get_parameters(self.net), len(self.trainloader), {}
+
+    def evaluate(self, parameters, config):
+        print(f"[Client {self.cid}] evaluate, config: {config}")
+        set_parameters(self.net, parameters)
+        loss, accuracy = test(self.net, self.valloader)
+        return float(loss), len(self.valloader), {"accuracy": float(accuracy)}
+
+
+def numpyclient_fn(cid) -&gt; FlowerNumPyClient:
+    net = Net().to(DEVICE)
+    trainloader = trainloaders[int(cid)]
+    valloader = valloaders[int(cid)]
+    return FlowerNumPyClient(cid, net, trainloader, valloader)
+</pre><button class="copybtn o-tooltip--left" data-tooltip=Copy data-clipboard-target=#codecell9>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+</div>
+<p>We’ve seen this before, there’s nothing new so far. The only <em>tiny</em> difference compared to the previous notebook is naming, we’ve changed <code class="docutils literal notranslate"><span class=pre>FlowerClient</span></code> to <code class="docutils literal notranslate"><span class=pre>FlowerNumPyClient</span></code> and <code class="docutils literal notranslate"><span class=pre>client_fn</span></code> to <code class="docutils literal notranslate"><span class=pre>numpyclient_fn</span></code>. Let’s run it to see the output we get:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class=highlight><pre id=codecell10><span></span>[ ]:
+</pre><button class="copybtn o-tooltip--left sf-hidden" data-tooltip=Copy data-clipboard-target=#codecell10>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class=highlight><pre id=codecell11><span></span># Specify client resources if you need GPU (defaults to 1 CPU and 0 GPU)
+client_resources = None
+if DEVICE.type == "cuda":
+    client_resources = {"num_gpus": 1}
+
+fl.simulation.start_simulation(
+    client_fn=numpyclient_fn,
+    num_clients=2,
+    config=fl.server.ServerConfig(num_rounds=3),
+    client_resources=client_resources,
+)
+</pre><button class="copybtn o-tooltip--left" data-tooltip=Copy data-clipboard-target=#codecell11>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+</div>
+<p>This works as expected, two clients are training for three rounds of federated learning.</p>
+<p>Let’s dive a little bit deeper and discuss how Flower executes this simulation. Whenever a client is selected to do some work, <code class="docutils literal notranslate"><span class=pre>start_simulation</span></code> calls the function <code class="docutils literal notranslate"><span class=pre>numpyclient_fn</span></code> to create an instance of our <code class="docutils literal notranslate"><span class=pre>FlowerNumPyClient</span></code> (along with loading the model and the data).</p>
+<p>But here’s the perhaps surprising part: Flower doesn’t actually use the <code class="docutils literal notranslate"><span class=pre>FlowerNumPyClient</span></code> object directly. Instead, it wraps the object to makes it look like a subclass of <code class="docutils literal notranslate"><span class=pre>flwr.client.Client</span></code>, not <code class="docutils literal notranslate"><span class=pre>flwr.client.NumPyClient</span></code>. In fact, the Flower core framework doesn’t know how to handle <code class="docutils literal notranslate"><span class=pre>NumPyClient</span></code>’s, it only knows how to handle <code class="docutils literal notranslate"><span class=pre>Client</span></code>’s. <code class="docutils literal notranslate"><span class=pre>NumPyClient</span></code> is just a convenience abstraction built on top of <code class="docutils literal notranslate"><span class=pre>Client</span></code>.</p>
+<p>Instead of building on top of <code class="docutils literal notranslate"><span class=pre>NumPyClient</span></code>, we can directly build on top of <code class="docutils literal notranslate"><span class=pre>Client</span></code>.</p>
+</section>
+<section id=Step-2:-Moving-from-NumPyClient-to-Client>
+<h2>Step 2: Moving from <code class="docutils literal notranslate"><span class=pre>NumPyClient</span></code> to <code class="docutils literal notranslate"><span class=pre>Client</span></code><a class=headerlink href=#Step-2:-Moving-from-NumPyClient-to-Client title="Permalink to this heading">#</a></h2>
+<p>Let’s try to do the same thing using <code class="docutils literal notranslate"><span class=pre>Client</span></code> instead of <code class="docutils literal notranslate"><span class=pre>NumPyClient</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class=highlight><pre id=codecell12><span></span>[ ]:
+</pre><button class="copybtn o-tooltip--left sf-hidden" data-tooltip=Copy data-clipboard-target=#codecell12>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class=highlight><pre id=codecell13><span></span>from flwr.common import (
+    Code,
+    EvaluateIns,
+    EvaluateRes,
+    FitIns,
+    FitRes,
+    GetParametersIns,
+    GetParametersRes,
+    Status,
+    ndarrays_to_parameters,
+    parameters_to_ndarrays,
+)
+
+
+class FlowerClient(fl.client.Client):
+    def __init__(self, cid, net, trainloader, valloader):
+        self.cid = cid
+        self.net = net
+        self.trainloader = trainloader
+        self.valloader = valloader
+
+    def get_parameters(self, ins: GetParametersIns) -&gt; GetParametersRes:
+        print(f"[Client {self.cid}] get_parameters")
+
+        # Get parameters as a list of NumPy ndarray's
+        ndarrays: List[np.ndarray] = get_parameters(self.net)
+
+        # Serialize ndarray's into a Parameters object
+        parameters = ndarrays_to_parameters(ndarrays)
+
+        # Build and return response
+        status = Status(code=Code.OK, message="Success")
+        return GetParametersRes(
+            status=status,
+            parameters=parameters,
+        )
+
+    def fit(self, ins: FitIns) -&gt; FitRes:
+        print(f"[Client {self.cid}] fit, config: {ins.config}")
+
+        # Deserialize parameters to NumPy ndarray's
+        parameters_original = ins.parameters
+        ndarrays_original = parameters_to_ndarrays(parameters_original)
+
+        # Update local model, train, get updated parameters
+        set_parameters(self.net, ndarrays_original)
+        train(self.net, self.trainloader, epochs=1)
+        ndarrays_updated = get_parameters(self.net)
+
+        # Serialize ndarray's into a Parameters object
+        parameters_updated = ndarrays_to_parameters(ndarrays_updated)
+
+        # Build and return response
+        status = Status(code=Code.OK, message="Success")
+        return FitRes(
+            status=status,
+            parameters=parameters_updated,
+            num_examples=len(self.trainloader),
+            metrics={},
+        )
+
+    def evaluate(self, ins: EvaluateIns) -&gt; EvaluateRes:
+        print(f"[Client {self.cid}] evaluate, config: {ins.config}")
+
+        # Deserialize parameters to NumPy ndarray's
+        parameters_original = ins.parameters
+        ndarrays_original = parameters_to_ndarrays(parameters_original)
+
+        set_parameters(self.net, ndarrays_original)
+        loss, accuracy = test(self.net, self.valloader)
+        # return float(loss), len(self.valloader), {"accuracy": float(accuracy)}
+
+        # Build and return response
+        status = Status(code=Code.OK, message="Success")
+        return EvaluateRes(
+            status=status,
+            loss=float(loss),
+            num_examples=len(self.valloader),
+            metrics={"accuracy": float(accuracy)},
+        )
+
+
+def client_fn(cid) -&gt; FlowerClient:
+    net = Net().to(DEVICE)
+    trainloader = trainloaders[int(cid)]
+    valloader = valloaders[int(cid)]
+    return FlowerClient(cid, net, trainloader, valloader)
+</pre><button class="copybtn o-tooltip--left" data-tooltip=Copy data-clipboard-target=#codecell13>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+</div>
+<p>Before we discuss the code in more detail, let’s try to run it! Gotta make sure our new <code class="docutils literal notranslate"><span class=pre>Client</span></code>-based client works, right?</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class=highlight><pre id=codecell14><span></span>[ ]:
+</pre><button class="copybtn o-tooltip--left sf-hidden" data-tooltip=Copy data-clipboard-target=#codecell14>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class=highlight><pre id=codecell15><span></span>fl.simulation.start_simulation(
+    client_fn=client_fn,
+    num_clients=2,
+    config=fl.server.ServerConfig(num_rounds=3),
+    client_resources=client_resources,
+)
+</pre><button class="copybtn o-tooltip--left" data-tooltip=Copy data-clipboard-target=#codecell15>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+</div>
+<p>That’s it, we’re now using <code class="docutils literal notranslate"><span class=pre>Client</span></code>. It probably looks similar to what we’ve done with <code class="docutils literal notranslate"><span class=pre>NumPyClient</span></code>. So what’s the difference?</p>
+<p>First of all, it’s more code. But why? The difference comes from the fact that <code class="docutils literal notranslate"><span class=pre>Client</span></code> expects us to take care of parameter serialization and deserialization. For Flower to be able to send parameters over the network, it eventually needs to turn these parameters into <code class="docutils literal notranslate"><span class=pre>bytes</span></code>. Turning parameters (e.g., NumPy <code class="docutils literal notranslate"><span class=pre>ndarray</span></code>’s) into raw bytes is called serialization. Turning raw bytes into something more useful (like NumPy <code class="docutils literal notranslate"><span class=pre>ndarray</span></code>’s) is called deserialization. Flower needs to do both: it
+needs to serialize parameters on the server-side and send them to the client, the client needs to deserialize them to use them for local training, and then serialize the updated parameters again to send them back to the server, which (finally!) deserializes them again in order to aggregate them with the updates received from other clients.</p>
+<p>The only <em>real</em> difference between Client and NumPyClient is that NumPyClient takes care of serialization and deserialization for you. It can do so because it expects you to return parameters as NumPy ndarray’s, and it knows how to handle these. This makes working with machine learning libraries that have good NumPy support (most of them) a breeze.</p>
+<p>In terms of API, there’s one major difference: all methods in Client take exactly one argument (e.g., <code class="docutils literal notranslate"><span class=pre>FitIns</span></code> in <code class="docutils literal notranslate"><span class=pre>Client.fit</span></code>) and return exactly one value (e.g., <code class="docutils literal notranslate"><span class=pre>FitRes</span></code> in <code class="docutils literal notranslate"><span class=pre>Client.fit</span></code>). The methods in <code class="docutils literal notranslate"><span class=pre>NumPyClient</span></code> on the other hand have multiple arguments (e.g., <code class="docutils literal notranslate"><span class=pre>parameters</span></code> and <code class="docutils literal notranslate"><span class=pre>config</span></code> in <code class="docutils literal notranslate"><span class=pre>NumPyClient.fit</span></code>) and multiple return values (e.g., <code class="docutils literal notranslate"><span class=pre>parameters</span></code>, <code class="docutils literal notranslate"><span class=pre>num_example</span></code>, and <code class="docutils literal notranslate"><span class=pre>metrics</span></code> in <code class="docutils literal notranslate"><span class=pre>NumPyClient.fit</span></code>) if there are multiple things to handle. These <code class="docutils literal notranslate"><span class=pre>*Ins</span></code> and
+<code class="docutils literal notranslate"><span class=pre>*Res</span></code> objects in <code class="docutils literal notranslate"><span class=pre>Client</span></code> wrap all the individual values you’re used to from <code class="docutils literal notranslate"><span class=pre>NumPyClient</span></code>.</p>
+</section>
+<section id=Step-3:-Custom-serialization>
+<h2>Step 3: Custom serialization<a class=headerlink href=#Step-3:-Custom-serialization title="Permalink to this heading">#</a></h2>
+<p>Here we will explore how to implement custom serialization with a simple example.</p>
+<p>But first what is serialization? Serialization is just the process of converting an object into raw bytes, and equally as important, deserialization is the process of converting raw bytes back into an object. This is very useful for network communication. Indeed, without serialization, you could not just a Python object through the internet.</p>
+<p>Federated Learning relies heavily on internet communication for training by sending Python objects back and forth between the clients and the server. This means that serialization is an essential part of Federated Learning.</p>
+<p>In the following section, we will write a basic example where instead of sending a serialized version of our <code class="docutils literal notranslate"><span class=pre>ndarray</span></code>s containing our parameters, we will first convert the <code class="docutils literal notranslate"><span class=pre>ndarray</span></code> into sparse matrices, before sending them. This technique can be used to save bandwidth, as in certain cases where the weights of a model are sparse (containing many 0 entries), converting them to a sparse matrix can greatly improve their bytesize.</p>
+<section id=Our-custom-serialization/deserialization-functions>
+<h3>Our custom serialization/deserialization functions<a class=headerlink href=#Our-custom-serialization/deserialization-functions title="Permalink to this heading">#</a></h3>
+<p>This is where the real serialization/deserialization will happen, especially in <code class="docutils literal notranslate"><span class=pre>ndarray_to_sparse_bytes</span></code> for serialization and <code class="docutils literal notranslate"><span class=pre>sparse_bytes_to_ndarray</span></code> for deserialization.</p>
+<p>Note that we imported the <code class="docutils literal notranslate"><span class=pre>scipy.sparse</span></code> library in order to convert our arrays.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class=highlight><pre id=codecell16><span></span>[ ]:
+</pre><button class="copybtn o-tooltip--left sf-hidden" data-tooltip=Copy data-clipboard-target=#codecell16>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class=highlight><pre id=codecell17><span></span>from io import BytesIO
+from typing import cast
+
+import numpy as np
+
+from flwr.common.typing import NDArray, NDArrays, Parameters
+
+
+def ndarrays_to_sparse_parameters(ndarrays: NDArrays) -&gt; Parameters:
+    """Convert NumPy ndarrays to parameters object."""
+    tensors = [ndarray_to_sparse_bytes(ndarray) for ndarray in ndarrays]
+    return Parameters(tensors=tensors, tensor_type="numpy.ndarray")
+
+
+def sparse_parameters_to_ndarrays(parameters: Parameters) -&gt; NDArrays:
+    """Convert parameters object to NumPy ndarrays."""
+    return [sparse_bytes_to_ndarray(tensor) for tensor in parameters.tensors]
+
+
+def ndarray_to_sparse_bytes(ndarray: NDArray) -&gt; bytes:
+    """Serialize NumPy ndarray to bytes."""
+    bytes_io = BytesIO()
+
+    if len(ndarray.shape) &gt; 1:
+        # We convert our ndarray into a sparse matrix
+        ndarray = torch.tensor(ndarray).to_sparse_csr()
+
+        # And send it byutilizing the sparse matrix attributes
+        # WARNING: NEVER set allow_pickle to true.
+        # Reason: loading pickled data can execute arbitrary code
+        # Source: https://numpy.org/doc/stable/reference/generated/numpy.save.html
+        np.savez(
+            bytes_io,  # type: ignore
+            crow_indices=ndarray.crow_indices(),
+            col_indices=ndarray.col_indices(),
+            values=ndarray.values(),
+            allow_pickle=False,
+        )
+    else:
+        # WARNING: NEVER set allow_pickle to true.
+        # Reason: loading pickled data can execute arbitrary code
+        # Source: https://numpy.org/doc/stable/reference/generated/numpy.save.html
+        np.save(bytes_io, ndarray, allow_pickle=False)
+    return bytes_io.getvalue()
+
+
+def sparse_bytes_to_ndarray(tensor: bytes) -&gt; NDArray:
+    """Deserialize NumPy ndarray from bytes."""
+    bytes_io = BytesIO(tensor)
+    # WARNING: NEVER set allow_pickle to true.
+    # Reason: loading pickled data can execute arbitrary code
+    # Source: https://numpy.org/doc/stable/reference/generated/numpy.load.html
+    loader = np.load(bytes_io, allow_pickle=False)  # type: ignore
+
+    if "crow_indices" in loader:
+        # We convert our sparse matrix back to a ndarray, using the attributes we sent
+        ndarray_deserialized = (
+            torch.sparse_csr_tensor(
+                crow_indices=loader["crow_indices"],
+                col_indices=loader["col_indices"],
+                values=loader["values"],
+            )
+            .to_dense()
+            .numpy()
+        )
+    else:
+        ndarray_deserialized = loader
+    return cast(NDArray, ndarray_deserialized)
+</pre><button class="copybtn o-tooltip--left" data-tooltip=Copy data-clipboard-target=#codecell17>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+</div>
+</section>
+<section id=Client-side>
+<h3>Client-side<a class=headerlink href=#Client-side title="Permalink to this heading">#</a></h3>
+<p>To be able to serialize our <code class="docutils literal notranslate"><span class=pre>ndarray</span></code>s into sparse parameters, we will just have to call our custom functions in our <code class="docutils literal notranslate"><span class=pre>flwr.client.Client</span></code>.</p>
+<p>Indeed, in <code class="docutils literal notranslate"><span class=pre>get_parameters</span></code> we need to serialize the parameters we got from our network using our custom <code class="docutils literal notranslate"><span class=pre>ndarrays_to_sparse_parameters</span></code> defined above.</p>
+<p>In <code class="docutils literal notranslate"><span class=pre>fit</span></code>, we first need to deserialize the parameters coming from the server using our custom <code class="docutils literal notranslate"><span class=pre>sparse_parameters_to_ndarrays</span></code> and then we need to serialize our local results with <code class="docutils literal notranslate"><span class=pre>ndarrays_to_sparse_parameters</span></code>.</p>
+<p>In <code class="docutils literal notranslate"><span class=pre>evaluate</span></code>, we will only need to deserialize the global parameters with our custom function.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class=highlight><pre id=codecell18><span></span>[ ]:
+</pre><button class="copybtn o-tooltip--left sf-hidden" data-tooltip=Copy data-clipboard-target=#codecell18>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class=highlight><pre id=codecell19><span></span>from flwr.common import (
+    Code,
+    EvaluateIns,
+    EvaluateRes,
+    FitIns,
+    FitRes,
+    GetParametersIns,
+    GetParametersRes,
+    Status,
+)
+
+
+class FlowerClient(fl.client.Client):
+    def __init__(self, cid, net, trainloader, valloader):
+        self.cid = cid
+        self.net = net
+        self.trainloader = trainloader
+        self.valloader = valloader
+
+    def get_parameters(self, ins: GetParametersIns) -&gt; GetParametersRes:
+        print(f"[Client {self.cid}] get_parameters")
+
+        # Get parameters as a list of NumPy ndarray's
+        ndarrays: List[np.ndarray] = get_parameters(self.net)
+
+        # Serialize ndarray's into a Parameters object using our custom function
+        parameters = ndarrays_to_sparse_parameters(ndarrays)
+
+        # Build and return response
+        status = Status(code=Code.OK, message="Success")
+        return GetParametersRes(
+            status=status,
+            parameters=parameters,
+        )
+
+    def fit(self, ins: FitIns) -&gt; FitRes:
+        print(f"[Client {self.cid}] fit, config: {ins.config}")
+
+        # Deserialize parameters to NumPy ndarray's using our custom function
+        parameters_original = ins.parameters
+        ndarrays_original = sparse_parameters_to_ndarrays(parameters_original)
+
+        # Update local model, train, get updated parameters
+        set_parameters(self.net, ndarrays_original)
+        train(self.net, self.trainloader, epochs=1)
+        ndarrays_updated = get_parameters(self.net)
+
+        # Serialize ndarray's into a Parameters object using our custom function
+        parameters_updated = ndarrays_to_sparse_parameters(ndarrays_updated)
+
+        # Build and return response
+        status = Status(code=Code.OK, message="Success")
+        return FitRes(
+            status=status,
+            parameters=parameters_updated,
+            num_examples=len(self.trainloader),
+            metrics={},
+        )
+
+    def evaluate(self, ins: EvaluateIns) -&gt; EvaluateRes:
+        print(f"[Client {self.cid}] evaluate, config: {ins.config}")
+
+        # Deserialize parameters to NumPy ndarray's using our custom function
+        parameters_original = ins.parameters
+        ndarrays_original = sparse_parameters_to_ndarrays(parameters_original)
+
+        set_parameters(self.net, ndarrays_original)
+        loss, accuracy = test(self.net, self.valloader)
+
+        # Build and return response
+        status = Status(code=Code.OK, message="Success")
+        return EvaluateRes(
+            status=status,
+            loss=float(loss),
+            num_examples=len(self.valloader),
+            metrics={"accuracy": float(accuracy)},
+        )
+
+
+def client_fn(cid) -&gt; FlowerClient:
+    net = Net().to(DEVICE)
+    trainloader = trainloaders[int(cid)]
+    valloader = valloaders[int(cid)]
+    return FlowerClient(cid, net, trainloader, valloader)
+</pre><button class="copybtn o-tooltip--left" data-tooltip=Copy data-clipboard-target=#codecell19>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+</div>
+</section>
+<section id=Server-side>
+<h3>Server-side<a class=headerlink href=#Server-side title="Permalink to this heading">#</a></h3>
+<p>For this example, we will just use <code class="docutils literal notranslate"><span class=pre>FedAvg</span></code> as a strategy. To change the serialization and deserialization here, we only need to reimplement the <code class="docutils literal notranslate"><span class=pre>evaluate</span></code> and <code class="docutils literal notranslate"><span class=pre>aggregate_fit</span></code> functions of <code class="docutils literal notranslate"><span class=pre>FedAvg</span></code>. The other functions of the strategy will be inherited from the super class <code class="docutils literal notranslate"><span class=pre>FedAvg</span></code>.</p>
+<p>As you can see only one line as change in <code class="docutils literal notranslate"><span class=pre>evaluate</span></code>:</p>
+<div class="highlight-python notranslate"><div class=highlight><pre id=codecell20><span></span><span class=n>parameters_ndarrays</span> <span class=o>=</span> <span class=n>sparse_parameters_to_ndarrays</span><span class=p>(</span><span class=n>parameters</span><span class=p>)</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip=Copy data-clipboard-target=#codecell20>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+<p>And for <code class="docutils literal notranslate"><span class=pre>aggregate_fit</span></code>, we will first deserialize every result we received:</p>
+<div class="highlight-python notranslate"><div class=highlight><pre id=codecell21><span></span><span class=n>weights_results</span> <span class=o>=</span> <span class=p>[</span>
+    <span class=p>(</span><span class=n>sparse_parameters_to_ndarrays</span><span class=p>(</span><span class=n>fit_res</span><span class=o>.</span><span class=n>parameters</span><span class=p>),</span> <span class=n>fit_res</span><span class=o>.</span><span class=n>num_examples</span><span class=p>)</span>
+    <span class=k>for</span> <span class=n>_</span><span class=p>,</span> <span class=n>fit_res</span> <span class=ow>in</span> <span class=n>results</span>
+<span class=p>]</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip=Copy data-clipboard-target=#codecell21>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+<p>And then serialize the aggregated result:</p>
+<div class="highlight-python notranslate"><div class=highlight><pre id=codecell22><span></span><span class=n>parameters_aggregated</span> <span class=o>=</span> <span class=n>ndarrays_to_sparse_parameters</span><span class=p>(</span><span class=n>aggregate</span><span class=p>(</span><span class=n>weights_results</span><span class=p>))</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip=Copy data-clipboard-target=#codecell22>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class=highlight><pre id=codecell23><span></span>[ ]:
+</pre><button class="copybtn o-tooltip--left sf-hidden" data-tooltip=Copy data-clipboard-target=#codecell23>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class=highlight><pre id=codecell24><span></span>from logging import WARNING
+from typing import Callable, Dict, List, Optional, Tuple, Union
+
+from flwr.common import FitRes, MetricsAggregationFn, NDArrays, Parameters, Scalar
+from flwr.common.logger import log
+from flwr.server.client_proxy import ClientProxy
+from flwr.server.strategy import FedAvg
+from flwr.server.strategy.aggregate import aggregate
+
+WARNING_MIN_AVAILABLE_CLIENTS_TOO_LOW = """
+Setting `min_available_clients` lower than `min_fit_clients` or
+`min_evaluate_clients` can cause the server to fail when there are too few clients
+connected to the server. `min_available_clients` must be set to a value larger
+than or equal to the values of `min_fit_clients` and `min_evaluate_clients`.
+"""
+
+
+class FedSparse(FedAvg):
+    def __init__(
+        self,
+        *,
+        fraction_fit: float = 1.0,
+        fraction_evaluate: float = 1.0,
+        min_fit_clients: int = 2,
+        min_evaluate_clients: int = 2,
+        min_available_clients: int = 2,
+        evaluate_fn: Optional[
+            Callable[
+                [int, NDArrays, Dict[str, Scalar]],
+                Optional[Tuple[float, Dict[str, Scalar]]],
+            ]
+        ] = None,
+        on_fit_config_fn: Optional[Callable[[int], Dict[str, Scalar]]] = None,
+        on_evaluate_config_fn: Optional[Callable[[int], Dict[str, Scalar]]] = None,
+        accept_failures: bool = True,
+        initial_parameters: Optional[Parameters] = None,
+        fit_metrics_aggregation_fn: Optional[MetricsAggregationFn] = None,
+        evaluate_metrics_aggregation_fn: Optional[MetricsAggregationFn] = None,
+    ) -&gt; None:
+        """Custom FedAvg strategy with sparse matrices.
+
+        Parameters
+        ----------
+        fraction_fit : float, optional
+            Fraction of clients used during training. Defaults to 0.1.
+        fraction_evaluate : float, optional
+            Fraction of clients used during validation. Defaults to 0.1.
+        min_fit_clients : int, optional
+            Minimum number of clients used during training. Defaults to 2.
+        min_evaluate_clients : int, optional
+            Minimum number of clients used during validation. Defaults to 2.
+        min_available_clients : int, optional
+            Minimum number of total clients in the system. Defaults to 2.
+        evaluate_fn : Optional[Callable[[int, NDArrays, Dict[str, Scalar]], Optional[Tuple[float, Dict[str, Scalar]]]]]
+            Optional function used for validation. Defaults to None.
+        on_fit_config_fn : Callable[[int], Dict[str, Scalar]], optional
+            Function used to configure training. Defaults to None.
+        on_evaluate_config_fn : Callable[[int], Dict[str, Scalar]], optional
+            Function used to configure validation. Defaults to None.
+        accept_failures : bool, optional
+            Whether or not accept rounds containing failures. Defaults to True.
+        initial_parameters : Parameters, optional
+            Initial global model parameters.
+        """
+
+        if (
+            min_fit_clients &gt; min_available_clients
+            or min_evaluate_clients &gt; min_available_clients
+        ):
+            log(WARNING, WARNING_MIN_AVAILABLE_CLIENTS_TOO_LOW)
+
+        super().__init__(
+            fraction_fit=fraction_fit,
+            fraction_evaluate=fraction_evaluate,
+            min_fit_clients=min_fit_clients,
+            min_evaluate_clients=min_evaluate_clients,
+            min_available_clients=min_available_clients,
+            evaluate_fn=evaluate_fn,
+            on_fit_config_fn=on_fit_config_fn,
+            on_evaluate_config_fn=on_evaluate_config_fn,
+            accept_failures=accept_failures,
+            initial_parameters=initial_parameters,
+            fit_metrics_aggregation_fn=fit_metrics_aggregation_fn,
+            evaluate_metrics_aggregation_fn=evaluate_metrics_aggregation_fn,
+        )
+
+    def evaluate(
+        self, server_round: int, parameters: Parameters
+    ) -&gt; Optional[Tuple[float, Dict[str, Scalar]]]:
+        """Evaluate model parameters using an evaluation function."""
+        if self.evaluate_fn is None:
+            # No evaluation function provided
+            return None
+
+        # We deserialize using our custom method
+        parameters_ndarrays = sparse_parameters_to_ndarrays(parameters)
+
+        eval_res = self.evaluate_fn(server_round, parameters_ndarrays, {})
+        if eval_res is None:
+            return None
+        loss, metrics = eval_res
+        return loss, metrics
+
+    def aggregate_fit(
+        self,
+        server_round: int,
+        results: List[Tuple[ClientProxy, FitRes]],
+        failures: List[Union[Tuple[ClientProxy, FitRes], BaseException]],
+    ) -&gt; Tuple[Optional[Parameters], Dict[str, Scalar]]:
+        """Aggregate fit results using weighted average."""
+        if not results:
+            return None, {}
+        # Do not aggregate if there are failures and failures are not accepted
+        if not self.accept_failures and failures:
+            return None, {}
+
+        # We deserialize each of the results with our custom method
+        weights_results = [
+            (sparse_parameters_to_ndarrays(fit_res.parameters), fit_res.num_examples)
+            for _, fit_res in results
+        ]
+
+        # We serialize the aggregated result using our custom method
+        parameters_aggregated = ndarrays_to_sparse_parameters(
+            aggregate(weights_results)
+        )
+
+        # Aggregate custom metrics if aggregation fn was provided
+        metrics_aggregated = {}
+        if self.fit_metrics_aggregation_fn:
+            fit_metrics = [(res.num_examples, res.metrics) for _, res in results]
+            metrics_aggregated = self.fit_metrics_aggregation_fn(fit_metrics)
+        elif server_round == 1:  # Only log this warning once
+            log(WARNING, "No fit_metrics_aggregation_fn provided")
+
+        return parameters_aggregated, metrics_aggregated
+</pre><button class="copybtn o-tooltip--left" data-tooltip=Copy data-clipboard-target=#codecell24>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+</div>
+<p>We can now run our custom serialization example!</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class=highlight><pre id=codecell25><span></span>[ ]:
+</pre><button class="copybtn o-tooltip--left sf-hidden" data-tooltip=Copy data-clipboard-target=#codecell25>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class=highlight><pre id=codecell26><span></span>strategy = FedSparse()
+
+fl.simulation.start_simulation(
+    strategy=strategy,
+    client_fn=client_fn,
+    num_clients=2,
+    config=fl.server.ServerConfig(num_rounds=3),
+    client_resources=client_resources,
+)
+</pre><button class="copybtn o-tooltip--left" data-tooltip=Copy data-clipboard-target=#codecell26>
+ <svg xmlns=http://www.w3.org/2000/svg class="icon icon-tabler icon-tabler-copy" width=44 height=44 viewBox="0 0 24 24" stroke-width=1.5 stroke=#000000 fill=none stroke-linecap=round stroke-linejoin=round>
+ <title>Copy to clipboard</title>
+ <path stroke=none d="M0 0h24v24H0z" fill=none></path>
+ <rect x=8 y=8 width=12 height=12 rx=2></rect>
+ <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+ </button></div>
+</div>
+</div>
+</section>
+</section>
+<section id=Recap>
+<h2>Recap<a class=headerlink href=#Recap title="Permalink to this heading">#</a></h2>
+<p>In this part of the tutorial, we’ve seen how we can build clients by subclassing either <code class="docutils literal notranslate"><span class=pre>NumPyClient</span></code> or <code class="docutils literal notranslate"><span class=pre>Client</span></code>. <code class="docutils literal notranslate"><span class=pre>NumPyClient</span></code> is a convenience abstraction that makes it easier to work with machine learning libraries that have good NumPy interoperability. <code class="docutils literal notranslate"><span class=pre>Client</span></code> is a more flexible abstraction that allows us to do things that are not possible in <code class="docutils literal notranslate"><span class=pre>NumPyClient</span></code>. In order to do so, it requires us to handle parameter serialization and deserialization ourselves.</p>
+</section>
+<section id=Next-steps class=active>
+<h2>Next steps<a class=headerlink href=#Next-steps title="Permalink to this heading">#</a></h2>
+<p>Before you continue, make sure to join the Flower community on Slack: <a class="reference external" href=https://flower.ai/join-slack/>Join Slack</a></p>
+<p>There’s a dedicated <code class="docutils literal notranslate"><span class=pre>#questions</span></code> channel if you need help, but we’d also love to hear who you are in <code class="docutils literal notranslate"><span class=pre>#introductions</span></code>!</p>
+<p>This is the final part of the Flower tutorial (for now!), congratulations! You’re now well equipped to understand the rest of the documentation. There are many topics we didn’t cover in the tutorial, we recommend the following resources:</p>
+<ul class=simple>
+<li><p><a class="reference external" href=https://flower.ai/docs/>Read Flower Docs</a></p></li>
+<li><p><a class="reference external" href=https://github.com/adap/flower/tree/main/examples>Check out Flower Code Examples</a></p></li>
+<li><p><a class="reference external" href=https://flower.ai/docs/baselines/>Use Flower Baselines for your research</a></p></li>
+<li><p><a class="reference external" href=https://flower.ai/conf/flower-summit-2023/>Watch Flower Summit 2023 videos</a></p></li>
+</ul>
+</section>
+</section>
+<br>
+<a href=https://colab.research.google.com/github/adap/flower/blob/main/doc/source/tutorial-series-customize-the-client-pytorch.ipynb>
+ <img alt="Open in Colab" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTE3IiBoZWlnaHQ9IjIwIj48bGluZWFyR3JhZGllbnQgaWQ9ImIiIHgyPSIwIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PC9saW5lYXJHcmFkaWVudD48Y2xpcFBhdGggaWQ9ImEiPjxyZWN0IHdpZHRoPSIxMTciIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjYSkiPjxwYXRoIGZpbGw9IiM1NTUiIGQ9Ik0wIDBoMzB2MjBIMHoiLz48cGF0aCBmaWxsPSIjMDA3ZWM2IiBkPSJNMzAgMGg4N3YyMEgzMHoiLz48cGF0aCBmaWxsPSJ1cmwoI2IpIiBkPSJNMCAwaDExN3YyMEgweiIvPjwvZz48ZyBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMTAiPjxzdmcgeD0iNHB4IiB5PSIwcHgiIHdpZHRoPSIyMnB4IiBoZWlnaHQ9IjIwcHgiIHZpZXdCb3g9Ii0yIDAgMjggMjQiIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiAjZmZmO2JvcmRlci1yYWRpdXM6IDFweDsiPjxwYXRoIHN0eWxlPSJmaWxsOiNlODcxMGE7IiBkPSJNMS45NzcsMTYuNzdjLTIuNjY3LTIuMjc3LTIuNjA1LTcuMDc5LDAtOS4zNTdDMi45MTksOC4wNTcsMy41MjIsOS4wNzUsNC40OSw5LjY5MWMtMS4xNTIsMS42LTEuMTQ2LDMuMjAxLTAuMDA0LDQuODAzQzMuNTIyLDE1LjExMSwyLjkxOCwxNi4xMjYsMS45NzcsMTYuNzd6Ii8+PHBhdGggc3R5bGU9ImZpbGw6I2Y5YWIwMDsiIGQ9Ik0xMi4yNTcsMTcuMTE0Yy0xLjc2Ny0xLjYzMy0yLjQ4NS0zLjY1OC0yLjExOC02LjAyYzAuNDUxLTIuOTEsMi4xMzktNC44OTMsNC45NDYtNS42NzhjMi41NjUtMC43MTgsNC45NjQtMC4yMTcsNi44NzgsMS44MTljLTAuODg0LDAuNzQzLTEuNzA3LDEuNTQ3LTIuNDM0LDIuNDQ2QzE4LjQ4OCw4LjgyNywxNy4zMTksOC40MzUsMTYsOC44NTZjLTIuNDA0LDAuNzY3LTMuMDQ2LDMuMjQxLTEuNDk0LDUuNjQ0Yy0wLjI0MSwwLjI3NS0wLjQ5MywwLjU0MS0wLjcyMSwwLjgyNkMxMy4yOTUsMTUuOTM5LDEyLjUxMSwxNi4zLDEyLjI1NywxNy4xMTR6Ii8+PHBhdGggc3R5bGU9ImZpbGw6I2U4NzEwYTsiIGQ9Ik0xOS41MjksOS42ODJjMC43MjctMC44OTksMS41NS0xLjcwMywyLjQzNC0yLjQ0NmMyLjcwMywyLjc4MywyLjcwMSw3LjAzMS0wLjAwNSw5Ljc2NGMtMi42NDgsMi42NzQtNi45MzYsMi43MjUtOS43MDEsMC4xMTVjMC4yNTQtMC44MTQsMS4wMzgtMS4xNzUsMS41MjgtMS43ODhjMC4yMjgtMC4yODUsMC40OC0wLjU1MiwwLjcyMS0wLjgyNmMxLjA1MywwLjkxNiwyLjI1NCwxLjI2OCwzLjYsMC44M0MyMC41MDIsMTQuNTUxLDIxLjE1MSwxMS45MjcsMTkuNTI5LDkuNjgyeiIvPjxwYXRoIHN0eWxlPSJmaWxsOiNmOWFiMDA7IiBkPSJNNC40OSw5LjY5MUMzLjUyMiw5LjA3NSwyLjkxOSw4LjA1NywxLjk3Nyw3LjQxM2MyLjIwOS0yLjM5OCw1LjcyMS0yLjk0Miw4LjQ3Ni0xLjM1NWMwLjU1NSwwLjMyLDAuNzE5LDAuNjA2LDAuMjg1LDEuMTI4Yy0wLjE1NywwLjE4OC0wLjI1OCwwLjQyMi0wLjM5MSwwLjYzMWMtMC4yOTksMC40Ny0wLjUwOSwxLjA2Ny0wLjkyOSwxLjM3MUM4LjkzMyw5LjUzOSw4LjUyMyw4Ljg0Nyw4LjAyMSw4Ljc0NkM2LjY3Myw4LjQ3NSw1LjUwOSw4Ljc4Nyw0LjQ5LDkuNjkxeiIvPjxwYXRoIHN0eWxlPSJmaWxsOiNmOWFiMDA7IiBkPSJNMS45NzcsMTYuNzdjMC45NDEtMC42NDQsMS41NDUtMS42NTksMi41MDktMi4yNzdjMS4zNzMsMS4xNTIsMi44NSwxLjQzMyw0LjQ1LDAuNDk5YzAuMzMyLTAuMTk0LDAuNTAzLTAuMDg4LDAuNjczLDAuMTljMC4zODYsMC42MzUsMC43NTMsMS4yODUsMS4xODEsMS44OWMwLjM0LDAuNDgsMC4yMjIsMC43MTUtMC4yNTMsMS4wMDZDNy44NCwxOS43Myw0LjIwNSwxOS4xODgsMS45NzcsMTYuNzd6Ii8+PC9zdmc+PHRleHQgeD0iMjQ1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiB0ZXh0TGVuZ3RoPSIzMCI+IDwvdGV4dD48dGV4dCB4PSI3MjUiIHk9IjE1MCIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9Ijc3MCI+T3BlbiBpbiBDb2xhYjwvdGV4dD48dGV4dCB4PSI3MjUiIHk9IjE0MCIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9Ijc3MCI+T3BlbiBpbiBDb2xhYjwvdGV4dD48L2c+IDwvc3ZnPgo=">
+</a>
+ </article>
+ </div>
+ <footer>
+ 
+ <div class=related-pages>
+ <a class=next-page href=https://flower.ai/docs/framework/tutorial-quickstart-pytorch.html>
+ <div class=page-info>
+ <div class=context>
+ <span>Next</span>
+ </div>
+ <div class=title>Quickstart PyTorch</div>
+ </div>
+ <svg class=furo-related-icon><use href=#svg-arrow-right></use></svg>
+ </a>
+ <a class=prev-page href=https://flower.ai/docs/framework/tutorial-series-build-a-strategy-from-scratch-pytorch.html>
+ <svg class=furo-related-icon><use href=#svg-arrow-right></use></svg>
+ <div class=page-info>
+ <div class=context>
+ <span>Previous</span>
+ </div>
+ 
+ <div class=title>Build a strategy from scratch</div>
+ 
+ </div>
+ </a>
+ </div>
+ <div class=bottom-of-page>
+ <div class=left-details>
+ <div class=copyright>
+ Copyright © 2024 Flower Labs GmbH
+ </div>
+ Made with <a href=https://www.sphinx-doc.org/>Sphinx</a> and <a class=muted-link href=https://pradyunsg.me/>@pradyunsg</a>'s
+ 
+ <a href=https://github.com/pradyunsg/furo>Furo</a>
+ 
+ </div>
+ <div class=right-details>
+ 
+ </div>
+ </div>
+ 
+ </footer>
+ </div>
+ <aside class=toc-drawer>
+ 
+ 
+ <div class="toc-sticky toc-scroll">
+ <div class=toc-title-container>
+ <span class=toc-title>
+ On this page
+ </span>
+ </div>
+ <div class=toc-tree-container>
+ <div class=toc-tree>
+ <ul>
+<li><a class="reference internal sf-hidden" href=#>Customize the client</a><ul>
+<li><a class="reference internal" href=#Step-0:-Preparation>Step 0: Preparation</a><ul>
+<li><a class="reference internal" href=#Installing-dependencies>Installing dependencies</a></li>
+<li><a class="reference internal" href=#Data-loading>Data loading</a></li>
+<li><a class="reference internal" href=#Model-training/evaluation>Model training/evaluation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href=#Step-1:-Revisiting-NumPyClient>Step 1: Revisiting NumPyClient</a></li>
+<li><a class="reference internal" href=#Step-2:-Moving-from-NumPyClient-to-Client>Step 2: Moving from <code class="docutils literal notranslate"><span class=pre>NumPyClient</span></code> to <code class="docutils literal notranslate"><span class=pre>Client</span></code></a></li>
+<li><a class="reference internal" href=#Step-3:-Custom-serialization>Step 3: Custom serialization</a><ul>
+<li><a class="reference internal" href=#Our-custom-serialization/deserialization-functions>Our custom serialization/deserialization functions</a></li>
+<li><a class="reference internal" href=#Client-side>Client-side</a></li>
+<li><a class="reference internal" href=#Server-side>Server-side</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href=#Recap>Recap</a></li>
+<li class=scroll-current><a class="reference internal" href=#Next-steps>Next steps</a></li>
+</ul>
+</li>
+</ul>
+ </div>
+ </div>
+ </div>
+ 
+ 
+ </aside>
+ </div>
+</div>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
