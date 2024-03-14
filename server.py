@@ -6,6 +6,7 @@ from sklearn.pipeline import make_pipeline
 from typing import Dict,Optional,Tuple
 from model import *
 from utils import *
+from strategy import *
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -45,19 +46,20 @@ if __name__ == "__main__":
 
     pipe_admm = make_pipeline(transform,  model)
 
-    strategy = fl.server.strategy.FedAvg(
-        min_available_clients=1,
-        evaluate_fn=get_evaluate_fn(model),
-        on_fit_config_fn=fit_round,
-    )
+    #strategy = fl.server.strategy.FedAvg(
+    #    min_available_clients=1,
+    #    evaluate_fn=get_evaluate_fn(model),
+    #    on_fit_config_fn=fit_round,
+    #)
+    strategy = ConsensusADMM()
     fl.server.start_server(server_address="127.0.0.1:8080", strategy=strategy, config=fl.server.ServerConfig(num_rounds=20))
 
-    print(model.coeff_,model.offset_)
+    #print(model.coeff_,model.offset_)
     xx, yy = np.meshgrid(np.linspace(-4.5, 4.5, 100), np.linspace(-4.5, 4.5, 100))
     Z_admm = pipe_admm.decision_function(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
     plt.figure(figsize=(9, 6))
     plt.title("One Class ADMM")
-    plt.contourf(xx, yy, Z_admm, levels=np.linspace(Z_admm.min(), 0, 8), cmap=plt.cm.PuBu)
+    plt.contourf(xx, yy, Z_admm, levels=np.linspace(0, 8, 1), cmap=plt.cm.PuBu)
     a = plt.contour(xx, yy, Z_admm, levels=[0], linewidths=2, colors="darkred")
     plt.contourf(xx, yy, Z_admm, levels=[0, Z_admm.max()], colors="palevioletred")
     plt.scatter(X_test_2d[:, 0], X_test_2d[:, 1], c="gold", s=18,edgecolors="k")

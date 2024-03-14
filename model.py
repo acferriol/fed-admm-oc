@@ -24,6 +24,8 @@ class Admm_OneClassSVM:
         
         self.coeff_   = None #w
         self.offset_  = None #b
+        self.dual_coeff = None
+        self.dual_offset = None
         
 
     def decision_function(self,X): #Decision function
@@ -65,12 +67,17 @@ def train(model:Admm_OneClassSVM, X,max_iter:int,verbose=False):
 
     ui  = ui  + wir - wz
     vi  = vi  + bir - bz
+    
+    model.coeff_ = wir
+    model.offset_ = bir
+    model.dual_coeff = ui
+    model.dual_offset = vi
 
 
 
 def get_model_parameters(model:Admm_OneClassSVM):
     """Returns the paramters of a ADMM_OC model"""
-    params = [model.coeff_, model.offset_]
+    params = [model.coeff_, model.offset_,model.dual_coeff,model.dual_offset]
     return params
 
 def set_model_parameters(
@@ -79,6 +86,8 @@ def set_model_parameters(
     """Sets the parameters of a ADMM_OC model"""
     model.coeff_ = params[0]
     model.offset_ = params[1]
+    model.coeff_ = params[2]
+    model.dual_offset = params[3]
     return model
 
 def set_initial_parameters(
@@ -86,5 +95,7 @@ def set_initial_parameters(
 ) -> Admm_OneClassSVM:
     """Sets the parameters of a ADMM_OC model"""
     model.coeff_ = np.random.randn(m,1)
-    model.offset_ = np.random.randn(1)    
+    model.offset_ = np.random.randn(1) 
+    model.dual_coeff = np.zeros((m,1))                # scaled weight multipliers
+    model.dual_offset = np.zeros((1,1))
     return model
